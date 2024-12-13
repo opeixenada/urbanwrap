@@ -3,7 +3,13 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-const JsonModal = ({ isOpen, onClose, data }) => {
+interface JsonModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  data: unknown;
+}
+
+const JsonModal: React.FC<JsonModalProps> = ({ isOpen, onClose, data }) => {
   if (!isOpen) return null;
 
   return (

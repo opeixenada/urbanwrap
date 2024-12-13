@@ -4,21 +4,22 @@ import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import JsonModal from '@/components/JsonModal';
 import CheckinCard from '@/components/CheckinCard';
+import Checkin from '@/types/Checkin';
 
 const USCCheckins = () => {
   const [token, setToken] = useState('');
   const [year, setYear] = useState(new Date().getFullYear().toString());
-  const [checkins, setCheckins] = useState([]);
+  const [checkins, setCheckins] = useState<Checkin[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selectedJson, setSelectedJson] = useState(null);
+  const [selectedJson, setSelectedJson] = useState<Checkin | null>(null);
 
   const fetchCheckins = async () => {
     setLoading(true);
     setError('');
 
     try {
-      let allRecords = [];
+      let allRecords: Checkin[] = [];
       let page = 1;
       const pageSize = 10;
 
@@ -46,8 +47,8 @@ const USCCheckins = () => {
         }
 
         const processedRecords = data.data
-          .filter((item) => item.course)
-          .filter((item) => new Date(item.created).getFullYear() === parseInt(year));
+          .filter((item: Checkin) => item.course)
+          .filter((item: Checkin) => new Date(item.created).getFullYear() === parseInt(year));
 
         allRecords = [...allRecords, ...processedRecords];
 
@@ -59,10 +60,11 @@ const USCCheckins = () => {
       }
 
       // Sort by date descending
-      allRecords.sort((a, b) => new Date(b.created) - new Date(a.created));
+      allRecords.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
       setCheckins(allRecords);
     } catch (error) {
-      setError(error.message);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

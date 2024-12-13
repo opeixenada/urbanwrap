@@ -2,8 +2,13 @@
 
 import React from 'react';
 import { Calendar, Clock, MapPin, Tag } from 'lucide-react';
+import Checkin from '@/types/Checkin';
 
-const CheckinCard = ({ checkin }) => {
+interface CheckinCardProps {
+  checkin: Checkin;
+}
+
+const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
   const startTime = new Date(checkin.course.startDateTimeUTC).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
