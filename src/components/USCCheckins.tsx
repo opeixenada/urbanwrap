@@ -22,6 +22,8 @@ const USCCheckins = () => {
       let allRecords: Checkin[] = [];
       let page = 1;
       const pageSize = 10;
+      const requestedYear = parseInt(year);
+      const cutoffDate = new Date(requestedYear - 1, 12, 1); // December 1st of previous year
 
       while (true) {
         const response = await fetch('/api/usc', {
@@ -48,7 +50,14 @@ const USCCheckins = () => {
 
         const processedRecords = data.data
           .filter((item: Checkin) => item.course)
-          .filter((item: Checkin) => new Date(item.created).getFullYear() === parseInt(year));
+          .filter((item: Checkin) => new Date(item.created).getFullYear() === requestedYear);
+
+        // Check if the last record is too old
+        const lastRecord = data.data[data.data.length - 1];
+        if (lastRecord && new Date(lastRecord.created) < cutoffDate) {
+          allRecords = [...allRecords, ...processedRecords];
+          break;
+        }
 
         allRecords = [...allRecords, ...processedRecords];
 
