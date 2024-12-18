@@ -5,6 +5,8 @@ import { Loader2 } from 'lucide-react';
 import JsonModal from '@/components/JsonModal';
 import CheckinCard from '@/components/CheckinCard';
 import Checkin from '@/types/Checkin';
+import StatRow from '@/components/StatRow';
+import { calculateStats } from '@/utils/stats';
 
 const USCCheckins = () => {
   const [token, setToken] = useState('');
@@ -82,7 +84,12 @@ const USCCheckins = () => {
   return (
     <div className='container mx-auto p-4'>
       <div className='mb-6'>
-        <h1 className='text-2xl font-bold mb-6'>Urban Sports Club Checkins</h1>
+        <h1 className='text-4xl font-bold mb-6 flex items-center gap-2 mt-4'>
+          Urban Sports Wrapped{' '}
+          <span role='img' aria-label='wrapped present'>
+            🎁
+          </span>
+        </h1>
 
         <div className='flex gap-4 mb-6'>
           <input
@@ -90,19 +97,19 @@ const USCCheckins = () => {
             placeholder='Enter your USC token'
             value={token}
             onChange={(e) => setToken(e.target.value)}
-            className='flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-600'
           />
           <input
             type='number'
             placeholder='Year'
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className='w-24 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='w-24 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-600'
           />
           <button
             onClick={fetchCheckins}
             disabled={!token || !year || loading}
-            className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center'
+            className='min-w-[150px] px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center'
           >
             {loading ? (
               <>
@@ -123,6 +130,24 @@ const USCCheckins = () => {
           </div>
         )}
       </div>
+
+      {checkins.length > 0 && (
+        <>
+          <div className='mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6'>
+            <h2 className='text-xl font-bold mb-6'>Summary</h2>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+              <StatRow title='Most Visited Classes' stats={calculateStats(checkins).classes} />
+              <StatRow title='Most Visited Venues' stats={calculateStats(checkins).venues} />
+              <StatRow title='Top Categories' stats={calculateStats(checkins).categories} />
+              <StatRow title='Check-in Statuses' stats={calculateStats(checkins).statuses} />
+            </div>
+          </div>
+        </>
+      )}
+
+      {checkins.length == 0 && !loading && (
+        <div className='text-center text-gray-600 dark:text-gray-400 mt-8'>No check-ins found</div>
+      )}
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {checkins.map((checkin, index) => (
