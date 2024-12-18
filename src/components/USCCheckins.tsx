@@ -87,7 +87,7 @@ const USCCheckins = () => {
           Urban Sports Wrapped
         </h1>
 
-        <div className='flex gap-4 mb-6'>
+        <div className='flex flex-col md:flex-row gap-4 mb-6'>
           <input
             type='password'
             placeholder='Enter your USC token'
@@ -98,9 +98,16 @@ const USCCheckins = () => {
           <input
             type='number'
             placeholder='Year'
+            min='2020'
+            max={new Date().getFullYear()}
             value={year}
-            onChange={(e) => setYear(e.target.value)}
-            className='w-24 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-600'
+            onChange={(e) => {
+              const val = parseInt(e.target.value);
+              if (!isNaN(val) && val >= 2020 && val <= new Date().getFullYear()) {
+                setYear(val.toString());
+              }
+            }}
+            className='w-full md:w-24 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-600'
           />
           <button
             onClick={fetchCheckins}
