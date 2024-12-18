@@ -22,7 +22,6 @@ interface CheckinStats {
     };
     timing: {
       favoriteTimeOfDay: string;
-      averageClassDuration: number;
       totalHoursSpent: number;
       busiest: {
         day: string;
@@ -45,6 +44,7 @@ interface CheckinStats {
       percentageInFavorite: number;
       favoriteIcon: string;
       hoursInFavorite: number;
+      topClasses: { [key: string]: number };
     };
     online: {
       totalOnline: number;

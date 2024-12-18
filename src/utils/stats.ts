@@ -155,6 +155,24 @@ const generateRecommendations = (checkins: Checkin[]): string[] => {
   return recommendations;
 };
 
+const getTopClassVenueCombos = (
+  checkins: Checkin[],
+  categoryName: string
+): { [key: string]: number } => {
+  const categoryCheckins = checkins.filter(
+    (checkin) => checkin.course.category.name === categoryName
+  );
+
+  return categoryCheckins.reduce(
+    (acc, checkin) => {
+      const key = `${checkin.course.title} at ${checkin.course.venueName}`;
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
+};
+
 export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   const checkedInOnly = checkins.filter((checkin) => checkin.status === 'CHECKEDIN');
 
@@ -162,7 +180,22 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   const venues = countTop(checkedInOnly, (checkin) => checkin.course.venueName);
   const mostVisitedVenue = Object.keys(venues)[0];
   const categories = countTop(checkedInOnly, (checkin) => checkin.course.category.name);
+
+  // Favorite category analysis
   const favoriteCategory = Object.keys(categories)[0];
+  const hoursInFavorite = calculateHoursInCategory(checkedInOnly, favoriteCategory);
+  const favoriteClassVenueCombos = Object.entries(
+    getTopClassVenueCombos(checkedInOnly, favoriteCategory)
+  )
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5)
+    .reduce(
+      (acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      },
+      {} as { [key: string]: number }
+    );
 
   // Get unique sets
   const uniqueClasses = new Set(checkedInOnly.map((c) => c.course.title));
@@ -212,11 +245,8 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   const cityCounts = countTop(checkedInOnly, (c) => c.course.cityName);
   const districtCounts = countTop(
     checkedInOnly,
-    (c) => `${c.course.cityName}/${c.course.districtName}`
+    (c) => `${c.course.cityName} ${c.course.districtName}`
   );
-
-  // Favorite category analysis
-  const hoursInFavorite = calculateHoursInCategory(checkedInOnly, favoriteCategory);
 
   // Recommendations
   const recommendations = generateRecommendations(checkedInOnly);
@@ -243,7 +273,6 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
       },
       timing: {
         favoriteTimeOfDay: getTimeOfDay(checkedInOnly[0].course.startDateTimeUTC),
-        averageClassDuration: Math.round(totalDuration / checkedInOnly.length),
         totalHoursSpent: Math.round(totalDuration / 60),
         busiest: {
           day: Object.entries(daysCounts).sort(([, a], [, b]) => b - a)[0][0],
@@ -265,6 +294,7 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
           checkedInOnly.find((c) => c.course.category.name === favoriteCategory)?.course.category
             .icon || '',
         hoursInFavorite,
+        topClasses: favoriteClassVenueCombos,
       },
       online: {
         totalOnline: onlineClasses.length,

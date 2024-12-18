@@ -67,8 +67,10 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       content: (
         <div className='space-y-4'>
           <h3 className='text-xl font-bold mb-4'>Your Activity Summary</h3>
-          <p className='text-3xl font-bold text-blue-500'>{stats.insights.totalCheckins}</p>
-          <p className='text-gray-600 dark:text-gray-300'>Total Check-ins</p>
+          <div>
+            <p className='text-3xl font-bold text-blue-500'>{stats.insights.totalCheckins}</p>
+            <p className='text-sm text-gray-600 dark:text-gray-300'>Total Check-ins</p>
+          </div>
           <div className='grid grid-cols-2 gap-4 mt-4'>
             <div>
               <p className='text-2xl font-bold'>{stats.insights.uniqueClasses}</p>
@@ -124,20 +126,16 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       content: (
         <div className='space-y-4'>
           <h3 className='text-xl font-bold mb-4'>Your Timing</h3>
-          <p className='text-lg'>
-            You&#39;re a{' '}
-            <span className='font-bold'>{stats.insights.timing.favoriteTimeOfDay}</span>
-          </p>
           <div className='grid grid-cols-2 gap-4 mt-4'>
             <div>
               <p className='text-2xl font-bold'>{stats.insights.timing.totalHoursSpent}</p>
               <p className='text-sm text-gray-600 dark:text-gray-300'>Total Hours</p>
             </div>
-            <div>
-              <p className='text-2xl font-bold'>{stats.insights.timing.averageClassDuration}</p>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>Avg Minutes/Class</p>
-            </div>
           </div>
+
+          <p className='text-lg'>
+            You&#39;re <span className='font-bold'>{stats.insights.timing.favoriteTimeOfDay}</span>
+          </p>
 
           <div className='space-y-4'>
             {Object.entries(stats.insights.timing.distribution).map(([timeSlot, percentage]) => (
@@ -246,6 +244,13 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       content: (
         <div className='space-y-4'>
           <h3 className='text-xl font-bold mb-4'>{stats.insights.categories.favorite} Deep Dive</h3>
+
+          <div>
+            <p className='text-sm text-gray-600 dark:text-gray-300'>
+              Your favorite category was {stats.insights.categories.favorite}
+            </p>
+          </div>
+
           <div className='space-y-4'>
             <div>
               <p className='text-3xl font-bold text-blue-500'>
@@ -253,7 +258,8 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
               </p>
               <p className='text-gray-600 dark:text-gray-300'>Hours Spent</p>
             </div>
-            <div className='grid grid-cols-2 gap-4 mt-4'>
+
+            <div className='grid grid-cols-2 gap-4'>
               <div>
                 <p className='text-2xl font-bold'>
                   {stats.insights.categories.percentageInFavorite}%
@@ -270,6 +276,18 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
                   %
                 </p>
                 <p className='text-sm text-gray-600 dark:text-gray-300'>of Total Time</p>
+              </div>
+            </div>
+
+            <div className='mt-6'>
+              <p className='font-medium mb-2'>Your favorite classes in this category:</p>
+              <div className='space-y-2'>
+                {Object.entries(stats.insights.categories.topClasses).map(([combo, count]) => (
+                  <div key={combo} className='text-sm'>
+                    <p className='font-medium'>{combo}</p>
+                    <p className='text-gray-600 dark:text-gray-300'>{count} classes</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
