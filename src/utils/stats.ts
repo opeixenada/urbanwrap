@@ -82,10 +82,87 @@ const calculateClassDuration = (startUTC: string, endUTC: string): number => {
   return (end.getTime() - start.getTime()) / (1000 * 60); // Duration in minutes
 };
 
+const calculateTimeDistribution = (checkins: Checkin[]) => {
+  const distribution = {
+    earlyBird: 0,
+    afternoon: 0,
+    evening: 0,
+    nightOwl: 0,
+  };
+
+  checkins.forEach((checkin) => {
+    const hour = new Date(checkin.course.startDateTimeUTC).getHours();
+    if (hour >= 6 && hour < 12) distribution.earlyBird++;
+    else if (hour >= 12 && hour < 17) distribution.afternoon++;
+    else if (hour >= 17 && hour < 24) distribution.evening++;
+    else distribution.nightOwl++;
+  });
+
+  // Convert to percentages
+  const total = Object.values(distribution).reduce((a, b) => a + b, 0);
+  return {
+    earlyBird: Math.round((distribution.earlyBird / total) * 100),
+    afternoon: Math.round((distribution.afternoon / total) * 100),
+    evening: Math.round((distribution.evening / total) * 100),
+    nightOwl: Math.round((distribution.nightOwl / total) * 100),
+  };
+};
+
+const calculateHoursInCategory = (checkins: Checkin[], categoryName: string): number => {
+  const categoryCheckins = checkins.filter(
+    (checkin) => checkin.course.category.name === categoryName
+  );
+
+  const totalMinutes = categoryCheckins.reduce((total, checkin) => {
+    const start = new Date(checkin.course.startDateTimeUTC);
+    const end = new Date(checkin.course.endDateTimeUTC);
+    return total + (end.getTime() - start.getTime()) / (1000 * 60);
+  }, 0);
+
+  return Math.round(totalMinutes / 60);
+};
+
+const generateRecommendations = (checkins: Checkin[]): string[] => {
+  const recommendations: string[] = [];
+
+  // Time-based recommendations
+  const timeDistribution = calculateTimeDistribution(checkins);
+  if (timeDistribution.earlyBird < 20) {
+    recommendations.push('Try more morning classes to energize your day');
+  }
+
+  // Category diversity recommendations
+  const uniqueCategories = new Set(checkins.map((c) => c.course.category.name));
+  if (uniqueCategories.size < 5) {
+    recommendations.push('Explore more class varieties to diversify your routine');
+  }
+
+  // Venue diversity recommendations
+  const uniqueVenues = new Set(checkins.map((c) => c.course.venueName));
+  if (uniqueVenues.size < 3) {
+    recommendations.push('Visit new venues to keep your workout exciting');
+  }
+
+  // Online/In-person balance
+  const onlinePercentage = checkins.filter((c) => c.course.isOnline === 1).length / checkins.length;
+  if (onlinePercentage > 0.8) {
+    recommendations.push('Consider trying more in-person classes for a different experience');
+  } else if (onlinePercentage < 0.2) {
+    recommendations.push('Online classes could add flexibility to your schedule');
+  }
+
+  // Ensure we always return at least one recommendation
+  if (recommendations.length === 0) {
+    recommendations.push('Keep up your amazing workout consistency!');
+  }
+
+  return recommendations;
+};
+
 export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   const checkedInOnly = checkins.filter((checkin) => checkin.status === 'CHECKEDIN');
 
-  // Calculate base stats
+  // Calculate base stats (keep existing calculations)
   const venues = countTop(checkedInOnly, (checkin) => checkin.course.venueName);
   const mostVisitedVenue = Object.keys(venues)[0];
   const categories = countTop(checkedInOnly, (checkin) => checkin.course.category.name);
@@ -137,6 +214,11 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   const cityCounts = countTop(checkedInOnly, (c) => c.course.cityName);
   const districtCounts = countTop(checkedInOnly, (c) => c.course.districtName);
 
+  // More stats
+  const timeDistribution = calculateTimeDistribution(checkedInOnly);
+  const hoursInFavorite = calculateHoursInCategory(checkedInOnly, favoriteCategory);
+  const recommendations = generateRecommendations(checkedInOnly);
+
   return {
     categories,
     venues,
@@ -158,7 +240,7 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
         districtsVisited: uniqueDistricts.size,
       },
       timing: {
-        favoriteTimeOfDay: Object.entries(timeOfDayCounts).sort(([, a], [, b]) => b - a)[0][0],
+        favoriteTimeOfDay: getTimeOfDay(checkedInOnly[0].course.startDateTimeUTC),
         averageClassDuration: Math.round(totalDuration / checkedInOnly.length),
         totalHoursSpent: Math.round(totalDuration / 60),
         busiest: {
@@ -166,6 +248,7 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
           month: Object.entries(monthsCounts).sort(([, a], [, b]) => b - a)[0][0],
           weekday: Object.entries(weekdayCounts).sort(([, a], [, b]) => b - a)[0][0],
         },
+        distribution: timeDistribution,
       },
       streaks: calculateStreaks(checkedInOnly),
       categories: {
@@ -177,6 +260,7 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
         favoriteIcon:
           checkedInOnly.find((c) => c.course.category.name === favoriteCategory)?.course.category
             .icon || '',
+        hoursInFavorite,
       },
       online: {
         totalOnline: onlineClasses.length,
@@ -188,6 +272,7 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
         totalPlusCheckins: plusCheckins.length,
         percentagePlusCheckins: Math.round((plusCheckins.length / checkedInOnly.length) * 100),
       },
+      recommendations,
     },
   };
 };

@@ -5,8 +5,6 @@ import { Loader2 } from 'lucide-react';
 import JsonModal from '@/components/JsonModal';
 import CheckinCard from '@/components/CheckinCard';
 import Checkin from '@/types/Checkin';
-import StatRow from '@/components/StatRow';
-import { calculateStats } from '@/utils/stats';
 import CheckinsSummary from '@/components/CheckinsSummary';
 
 const USCCheckins = () => {
@@ -132,7 +130,7 @@ const USCCheckins = () => {
       {checkins.length > 0 && <CheckinsSummary checkins={checkins} />}
 
       {checkins.length == 0 && !loading && (
-        <div className='text-center text-gray-600 dark:text-gray-400 mt-8'>No check-ins found</div>
+        <div className='text-center text-gray-600 dark:text-gray-400 mt-8'>No check-ins here</div>
       )}
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>

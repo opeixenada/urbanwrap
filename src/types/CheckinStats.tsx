@@ -29,6 +29,12 @@ interface CheckinStats {
         month: string;
         weekday: string;
       };
+      distribution: {
+        earlyBird: number;
+        afternoon: number;
+        evening: number;
+        nightOwl: number;
+      };
     };
     streaks: {
       current: number;
@@ -39,6 +45,7 @@ interface CheckinStats {
       favorite: string;
       percentageInFavorite: number;
       favoriteIcon: string;
+      hoursInFavorite: number;
     };
     online: {
       totalOnline: number;
@@ -50,6 +57,7 @@ interface CheckinStats {
       totalPlusCheckins: number;
       percentagePlusCheckins: number;
     };
+    recommendations: string[];
   };
 }
 
