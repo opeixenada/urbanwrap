@@ -18,6 +18,21 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     minute: '2-digit',
   });
 
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case 'CHECKEDIN':
+        return { text: 'Attended', bgColor: 'bg-green-500' };
+      case 'LATE':
+        return { text: 'Late Cancel', bgColor: 'bg-yellow-500' };
+      case 'NOSHOW':
+        return { text: 'No Show', bgColor: 'bg-red-500' };
+      default:
+        return { text: status, bgColor: 'bg-gray-500' };
+    }
+  };
+
+  const statusInfo = getStatusDisplay(checkin.status);
+
   return (
     <div className='bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden'>
       <div className='relative h-48'>
@@ -46,17 +61,9 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
         </div>
         <div className='absolute bottom-2 left-2'>
           <span
-            className={`px-2 py-1 rounded-full text-xs text-white ${
-              checkin.status === 'CHECKEDIN'
-                ? 'bg-green-500'
-                : checkin.status === 'LATE'
-                  ? 'bg-yellow-500'
-                  : checkin.status === 'NOSHOW'
-                    ? 'bg-red-5   00'
-                    : 'bg-gray-500'
-            }`}
+            className={`px-3 py-1 rounded-full text-xs font-medium text-white ${statusInfo.bgColor}`}
           >
-            {checkin.status}
+            {statusInfo.text}
           </span>
         </div>
       </div>

@@ -7,6 +7,7 @@ import CheckinCard from '@/components/CheckinCard';
 import Checkin from '@/types/Checkin';
 import StatRow from '@/components/StatRow';
 import { calculateStats } from '@/utils/stats';
+import CheckinsSummary from '@/components/CheckinsSummary';
 
 const USCCheckins = () => {
   const [token, setToken] = useState('');
@@ -85,10 +86,7 @@ const USCCheckins = () => {
     <div className='container mx-auto p-4'>
       <div className='mb-6'>
         <h1 className='text-4xl font-bold mb-6 flex items-center gap-2 mt-4'>
-          Urban Sports Wrapped{' '}
-          <span role='img' aria-label='wrapped present'>
-            🎁
-          </span>
+          Urban Sports Wrapped
         </h1>
 
         <div className='flex gap-4 mb-6'>
@@ -131,19 +129,7 @@ const USCCheckins = () => {
         )}
       </div>
 
-      {checkins.length > 0 && (
-        <>
-          <div className='mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6'>
-            <h2 className='text-xl font-bold mb-6'>Summary</h2>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-              <StatRow title='Most Visited Classes' stats={calculateStats(checkins).classes} />
-              <StatRow title='Most Visited Venues' stats={calculateStats(checkins).venues} />
-              <StatRow title='Top Categories' stats={calculateStats(checkins).categories} />
-              <StatRow title='Check-in Statuses' stats={calculateStats(checkins).statuses} />
-            </div>
-          </div>
-        </>
-      )}
+      {checkins.length > 0 && <CheckinsSummary checkins={checkins} />}
 
       {checkins.length == 0 && !loading && (
         <div className='text-center text-gray-600 dark:text-gray-400 mt-8'>No check-ins found</div>
