@@ -17,6 +17,7 @@ import {
   Compass,
   Flame,
 } from 'lucide-react';
+import WeekdayDistribution from '@/components/WeekdayDistribution';
 
 interface CheckinsSummaryProps {
   checkins: Checkin[];
@@ -85,6 +86,61 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       ),
     },
     {
+      icon: Flame,
+      content: (
+        <div className='space-y-4'>
+          <h3 className='text-xl font-bold mb-4'>{stats.insights.categories.favorite} Deep Dive</h3>
+
+          <div>
+            <p className='text-sm text-gray-600 dark:text-gray-300'>
+              Your favorite category was {stats.insights.categories.favorite}
+            </p>
+          </div>
+
+          <div className='space-y-4'>
+            <div>
+              <p className='text-3xl font-bold text-blue-500'>
+                {stats.insights.categories.hoursInFavorite}
+              </p>
+              <p className='text-gray-600 dark:text-gray-300'>Hours Spent</p>
+            </div>
+
+            <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <p className='text-2xl font-bold'>
+                  {stats.insights.categories.percentageInFavorite}%
+                </p>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>of Total Classes</p>
+              </div>
+              <div>
+                <p className='text-2xl font-bold'>
+                  {Math.round(
+                    (stats.insights.categories.hoursInFavorite /
+                      stats.insights.timing.totalHoursSpent) *
+                      100
+                  )}
+                  %
+                </p>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>of Total Time</p>
+              </div>
+            </div>
+
+            <div className='mt-6'>
+              <p className='font-medium mb-2'>Your favorite classes:</p>
+              <div className='space-y-2'>
+                {Object.entries(stats.insights.categories.topClasses).map(([combo, count]) => (
+                  <div key={combo} className='text-sm'>
+                    <p className='font-medium'>{combo}</p>
+                    <p className='text-gray-600 dark:text-gray-300'>{count} classes</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
       icon: Calendar,
       content: (
         <div className='space-y-4'>
@@ -95,7 +151,7 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
               <p className='text-sm text-gray-600 dark:text-gray-300'>Days</p>
             </div>
           </div>
-          <p className='mt-4'>Most active on {stats.insights.timing.busiest.weekday}s</p>
+          <WeekdayDistribution distribution={stats.insights.timing.weekdayDistributionPercentage} />
         </div>
       ),
     },
@@ -138,20 +194,22 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
           </p>
 
           <div className='space-y-4'>
-            {Object.entries(stats.insights.timing.distribution).map(([timeSlot, percentage]) => (
-              <div key={timeSlot} className='space-y-1'>
-                <div className='flex justify-between text-sm'>
-                  <span className='capitalize'>{timeSlot.replace(/([A-Z])/g, ' $1').trim()}</span>
-                  <span>{percentage}%</span>
+            {Object.entries(stats.insights.timing.timeOfDayDistribution).map(
+              ([timeSlot, percentage]) => (
+                <div key={timeSlot} className='space-y-1'>
+                  <div className='flex justify-between text-sm'>
+                    <span className='capitalize'>{timeSlot.replace(/([A-Z])/g, ' $1').trim()}</span>
+                    <span>{percentage}%</span>
+                  </div>
+                  <div className='w-full bg-gray-200 rounded-full h-2'>
+                    <div
+                      className='bg-blue-500 h-2 rounded-full'
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
                 </div>
-                <div className='w-full bg-gray-200 rounded-full h-2'>
-                  <div
-                    className='bg-blue-500 h-2 rounded-full'
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       ),
@@ -239,61 +297,7 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
         </div>
       ),
     },
-    {
-      icon: Flame,
-      content: (
-        <div className='space-y-4'>
-          <h3 className='text-xl font-bold mb-4'>{stats.insights.categories.favorite} Deep Dive</h3>
 
-          <div>
-            <p className='text-sm text-gray-600 dark:text-gray-300'>
-              Your favorite category was {stats.insights.categories.favorite}
-            </p>
-          </div>
-
-          <div className='space-y-4'>
-            <div>
-              <p className='text-3xl font-bold text-blue-500'>
-                {stats.insights.categories.hoursInFavorite}
-              </p>
-              <p className='text-gray-600 dark:text-gray-300'>Hours Spent</p>
-            </div>
-
-            <div className='grid grid-cols-2 gap-4'>
-              <div>
-                <p className='text-2xl font-bold'>
-                  {stats.insights.categories.percentageInFavorite}%
-                </p>
-                <p className='text-sm text-gray-600 dark:text-gray-300'>of Total Classes</p>
-              </div>
-              <div>
-                <p className='text-2xl font-bold'>
-                  {Math.round(
-                    (stats.insights.categories.hoursInFavorite /
-                      stats.insights.timing.totalHoursSpent) *
-                      100
-                  )}
-                  %
-                </p>
-                <p className='text-sm text-gray-600 dark:text-gray-300'>of Total Time</p>
-              </div>
-            </div>
-
-            <div className='mt-6'>
-              <p className='font-medium mb-2'>Your favorite classes in this category:</p>
-              <div className='space-y-2'>
-                {Object.entries(stats.insights.categories.topClasses).map(([combo, count]) => (
-                  <div key={combo} className='text-sm'>
-                    <p className='font-medium'>{combo}</p>
-                    <p className='text-gray-600 dark:text-gray-300'>{count} classes</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
-    },
     {
       icon: Compass,
       content: (
@@ -333,7 +337,7 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       </div>
 
       <div className='bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6'>
-        <h2 className='text-xl font-bold mb-6'>Detailed Stats</h2>
+        <h2 className='text-xl font-bold mb-6'>More Stats</h2>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           <StatRow title='Top Categories' stats={stats.categories} />
           <StatRow title='Most Visited Venues' stats={stats.venues} />

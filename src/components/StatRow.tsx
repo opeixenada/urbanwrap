@@ -1,5 +1,5 @@
 const StatRow = ({ title, stats }: { title: string; stats: { [key: string]: number } }) => (
-  <div className='mb-4'>
+  <div>
     <h3 className='font-semibold mb-2'>{title}</h3>
     <div className='space-y-1'>
       {Object.entries(stats).map(([name, count]) => (

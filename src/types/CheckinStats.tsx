@@ -23,17 +23,13 @@ interface CheckinStats {
     timing: {
       favoriteTimeOfDay: string;
       totalHoursSpent: number;
-      busiest: {
-        day: string;
-        month: string;
-        weekday: string;
-      };
-      distribution: {
+      timeOfDayDistribution: {
         earlyBird: number;
         afternoon: number;
         evening: number;
         nightOwl: number;
       };
+      weekdayDistributionPercentage: { [key: string]: number };
     };
     streaks: {
       longest: number;

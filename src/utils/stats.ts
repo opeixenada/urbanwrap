@@ -173,6 +173,36 @@ const getTopClassVenueCombos = (
   );
 };
 
+const calculateWeekdayDistribution = (checkins: Checkin[]): { [key: string]: number } => {
+  const weekdayCounts: { [key: string]: number } = {
+    Sunday: 0,
+    Monday: 0,
+    Tuesday: 0,
+    Wednesday: 0,
+    Thursday: 0,
+    Friday: 0,
+    Saturday: 0,
+  };
+
+  // Count occurrences
+  checkins.forEach((checkin) => {
+    const weekday = new Date(checkin.course.date).toLocaleDateString('en-US', {
+      weekday: 'long',
+    });
+    weekdayCounts[weekday]++;
+  });
+
+  // Convert to percentages
+  const total = Object.values(weekdayCounts).reduce((a, b) => a + b, 0);
+  return Object.entries(weekdayCounts).reduce(
+    (acc, [day, count]) => {
+      acc[day] = Math.round((count / total) * 100);
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
+};
+
 export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   const checkedInOnly = checkins.filter((checkin) => checkin.status === 'CHECKEDIN');
 
@@ -211,12 +241,12 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   let totalDuration = 0;
 
   checkedInOnly.forEach((checkin) => {
-    const localDate = new Date(checkin.course.startDateTimeUTC);
+    const date = new Date(checkin.course.date);
     const timeOfDay = getTimeOfDay(checkin.course.startDateTimeUTC);
 
-    const day = localDate.toLocaleDateString('en-US', { day: '2-digit' });
-    const month = localDate.toLocaleDateString('en-US', { month: 'long' });
-    const weekday = localDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const day = date.toLocaleDateString('en-US', { day: '2-digit' });
+    const month = date.toLocaleDateString('en-US', { month: 'long' });
+    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
 
     timeOfDayCounts[timeOfDay] = (timeOfDayCounts[timeOfDay] || 0) + 1;
     daysCounts[day] = (daysCounts[day] || 0) + 1;
@@ -230,6 +260,7 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   });
 
   const timeDistribution = calculateTimeDistribution(checkedInOnly);
+  const weekdayDistribution = calculateWeekdayDistribution(checkedInOnly); // TODO: merge with `weekdayCounts`
 
   // Attendance analysis
   const totalLate = checkins.filter((c) => c.status === 'LATE').length;
@@ -274,12 +305,8 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
       timing: {
         favoriteTimeOfDay: getTimeOfDay(checkedInOnly[0].course.startDateTimeUTC),
         totalHoursSpent: Math.round(totalDuration / 60),
-        busiest: {
-          day: Object.entries(daysCounts).sort(([, a], [, b]) => b - a)[0][0],
-          month: Object.entries(monthsCounts).sort(([, a], [, b]) => b - a)[0][0],
-          weekday: Object.entries(weekdayCounts).sort(([, a], [, b]) => b - a)[0][0],
-        },
-        distribution: timeDistribution,
+        timeOfDayDistribution: timeDistribution,
+        weekdayDistributionPercentage: weekdayDistribution,
       },
       streaks: {
         longest: calculateLongestStreak(checkedInOnly),
