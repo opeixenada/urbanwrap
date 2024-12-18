@@ -141,21 +141,6 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       ),
     },
     {
-      icon: Calendar,
-      content: (
-        <div className='space-y-4'>
-          <h3 className='text-xl font-bold mb-4'>Your Longest Streak</h3>
-          <div className='grid grid-cols-2 gap-4'>
-            <div>
-              <p className='text-3xl font-bold text-blue-500'>{stats.insights.streaks.longest}</p>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>Days</p>
-            </div>
-          </div>
-          <WeekdayDistribution distribution={stats.insights.timing.weekdayDistributionPercentage} />
-        </div>
-      ),
-    },
-    {
       icon: MapPin,
       content: (
         <div className='space-y-4'>
@@ -177,6 +162,22 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
         </div>
       ),
     },
+    {
+      icon: Calendar,
+      content: (
+        <div className='space-y-4'>
+          <h3 className='text-xl font-bold mb-4'>Your Longest Streak</h3>
+          <div className='grid grid-cols-2 gap-4'>
+            <div>
+              <p className='text-3xl font-bold text-blue-500'>{stats.insights.streaks.longest}</p>
+              <p className='text-sm text-gray-600 dark:text-gray-300'>Days</p>
+            </div>
+          </div>
+          <WeekdayDistribution distribution={stats.insights.timing.weekdayDistributionPercentage} />
+        </div>
+      ),
+    },
+
     {
       icon: Clock,
       content: (
@@ -297,7 +298,6 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
         </div>
       ),
     },
-
     {
       icon: Compass,
       content: (
