@@ -86,15 +86,11 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
       icon: Calendar,
       content: (
         <div className='space-y-4'>
-          <h3 className='text-xl font-bold mb-4'>Your Streaks</h3>
+          <h3 className='text-xl font-bold mb-4'>Your Longest Streak</h3>
           <div className='grid grid-cols-2 gap-4'>
             <div>
               <p className='text-3xl font-bold text-blue-500'>{stats.insights.streaks.longest}</p>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>Longest Streak</p>
-            </div>
-            <div>
-              <p className='text-3xl font-bold text-green-500'>{stats.insights.streaks.current}</p>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>Current Streak</p>
+              <p className='text-sm text-gray-600 dark:text-gray-300'>Days</p>
             </div>
           </div>
           <p className='mt-4'>Most active on {stats.insights.timing.busiest.weekday}s</p>
@@ -141,6 +137,23 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
               <p className='text-2xl font-bold'>{stats.insights.timing.averageClassDuration}</p>
               <p className='text-sm text-gray-600 dark:text-gray-300'>Avg Minutes/Class</p>
             </div>
+          </div>
+
+          <div className='space-y-4'>
+            {Object.entries(stats.insights.timing.distribution).map(([timeSlot, percentage]) => (
+              <div key={timeSlot} className='space-y-1'>
+                <div className='flex justify-between text-sm'>
+                  <span className='capitalize'>{timeSlot.replace(/([A-Z])/g, ' $1').trim()}</span>
+                  <span>{percentage}%</span>
+                </div>
+                <div className='w-full bg-gray-200 rounded-full h-2'>
+                  <div
+                    className='bg-blue-500 h-2 rounded-full'
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ),
@@ -224,30 +237,6 @@ const CheckinsSummary: React.FC<CheckinsSummaryProps> = ({ checkins }) => {
                 {stats.insights.plus.percentagePlusCheckins}% of total
               </p>
             </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      icon: Clock,
-      content: (
-        <div className='space-y-4'>
-          <h3 className='text-xl font-bold mb-4'>Your Daily Rhythm</h3>
-          <div className='space-y-4'>
-            {Object.entries(stats.insights.timing.distribution).map(([timeSlot, percentage]) => (
-              <div key={timeSlot} className='space-y-1'>
-                <div className='flex justify-between text-sm'>
-                  <span className='capitalize'>{timeSlot.replace(/([A-Z])/g, ' $1').trim()}</span>
-                  <span>{percentage}%</span>
-                </div>
-                <div className='w-full bg-gray-200 rounded-full h-2'>
-                  <div
-                    className='bg-blue-500 h-2 rounded-full'
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       ),

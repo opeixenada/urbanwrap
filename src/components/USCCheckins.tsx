@@ -122,7 +122,7 @@ const USCCheckins = () => {
 
         {checkins.length > 0 && (
           <div className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
-            Found {checkins.length} check-ins for {year}
+            Found {checkins.length} check-ins
           </div>
         )}
       </div>

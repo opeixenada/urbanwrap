@@ -37,7 +37,6 @@ interface CheckinStats {
       };
     };
     streaks: {
-      current: number;
       longest: number;
     };
     categories: {

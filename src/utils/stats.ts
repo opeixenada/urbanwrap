@@ -27,7 +27,7 @@ const getClassesForVenue = (checkins: Checkin[], venueName: string): { [key: str
 };
 
 const getTimeOfDay = (utcDateStr: string): string => {
-  // Convert UTC to local time for accurate time-of-day classification
+  // Convert UTC to local time before categorizing
   const localDate = new Date(utcDateStr);
   const hour = localDate.getHours();
 
@@ -35,51 +35,6 @@ const getTimeOfDay = (utcDateStr: string): string => {
   if (hour < 12) return 'Early Bird (6AM-12PM)';
   if (hour < 17) return 'Afternoon Enthusiast (12PM-5PM)';
   return 'Evening Warrior (5PM-12AM)';
-};
-
-const calculateStreaks = (checkins: Checkin[]): { current: number; longest: number } => {
-  if (checkins.length === 0) return { current: 0, longest: 0 };
-
-  const sortedDates = checkins
-    .map((checkin) => new Date(checkin.course.date).toISOString().split('T')[0])
-    .sort()
-    .filter((date, index, array) => array.indexOf(date) === index);
-
-  if (sortedDates.length === 1) return { current: 1, longest: 1 };
-
-  let currentStreak = 0;
-  let longestStreak = 0;
-  let currentCount = 0;
-
-  for (let i = 0; i < sortedDates.length; i++) {
-    if (i === 0) {
-      currentCount = 1;
-      continue;
-    }
-
-    const prev = new Date(sortedDates[i - 1]);
-    const curr = new Date(sortedDates[i]);
-    const diffDays = (curr.getTime() - prev.getTime()) / (1000 * 3600 * 24);
-
-    if (diffDays === 1) {
-      currentCount++;
-    } else {
-      longestStreak = Math.max(longestStreak, currentCount);
-      currentCount = 1;
-    }
-  }
-
-  // Update longest streak one final time in case the current streak is the longest
-  longestStreak = Math.max(longestStreak, currentCount);
-  currentStreak = currentCount;
-
-  return { current: currentStreak, longest: longestStreak };
-};
-
-const calculateClassDuration = (startUTC: string, endUTC: string): number => {
-  const start = new Date(startUTC);
-  const end = new Date(endUTC);
-  return (end.getTime() - start.getTime()) / (1000 * 60); // Duration in minutes
 };
 
 const calculateTimeDistribution = (checkins: Checkin[]) => {
@@ -91,14 +46,15 @@ const calculateTimeDistribution = (checkins: Checkin[]) => {
   };
 
   checkins.forEach((checkin) => {
-    const hour = new Date(checkin.course.startDateTimeUTC).getHours();
-    if (hour >= 6 && hour < 12) distribution.earlyBird++;
-    else if (hour >= 12 && hour < 17) distribution.afternoon++;
-    else if (hour >= 17 && hour < 24) distribution.evening++;
+    // Convert UTC to local time for distribution calculation
+    const localHour = new Date(checkin.course.startDateTimeUTC).getHours();
+
+    if (localHour >= 6 && localHour < 12) distribution.earlyBird++;
+    else if (localHour >= 12 && localHour < 17) distribution.afternoon++;
+    else if (localHour >= 17 && localHour < 24) distribution.evening++;
     else distribution.nightOwl++;
   });
 
-  // Convert to percentages
   const total = Object.values(distribution).reduce((a, b) => a + b, 0);
   return {
     earlyBird: Math.round((distribution.earlyBird / total) * 100),
@@ -106,6 +62,40 @@ const calculateTimeDistribution = (checkins: Checkin[]) => {
     evening: Math.round((distribution.evening / total) * 100),
     nightOwl: Math.round((distribution.nightOwl / total) * 100),
   };
+};
+
+const calculateLongestStreak = (checkins: Checkin[]): number => {
+  if (checkins.length <= 1) return checkins.length;
+
+  const uniqueDates = [
+    ...new Set(
+      checkins.map((checkin) => new Date(checkin.course.date).toISOString().split('T')[0])
+    ),
+  ].sort();
+
+  let longestStreak = 1;
+  let currentStreak = 1;
+
+  for (let i = 1; i < uniqueDates.length; i++) {
+    const dayDiff =
+      (new Date(uniqueDates[i]).getTime() - new Date(uniqueDates[i - 1]).getTime()) /
+      (1000 * 3600 * 24);
+
+    if (dayDiff === 1) {
+      currentStreak++;
+      longestStreak = Math.max(longestStreak, currentStreak);
+    } else {
+      currentStreak = 1;
+    }
+  }
+
+  return longestStreak;
+};
+
+const calculateClassDuration = (startUTC: string, endUTC: string): number => {
+  const start = new Date(startUTC);
+  const end = new Date(endUTC);
+  return (end.getTime() - start.getTime()) / (1000 * 60); // Duration in minutes
 };
 
 const calculateHoursInCategory = (checkins: Checkin[], categoryName: string): number => {
@@ -120,6 +110,12 @@ const calculateHoursInCategory = (checkins: Checkin[], categoryName: string): nu
   }, 0);
 
   return Math.round(totalMinutes / 60);
+};
+
+const getUniqueDistricts = (checkins: Checkin[]): Set<string> => {
+  return new Set(
+    checkins.map((checkin) => `${checkin.course.cityName}/${checkin.course.districtName}`)
+  );
 };
 
 const generateRecommendations = (checkins: Checkin[]): string[] => {
@@ -171,8 +167,8 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   // Get unique sets
   const uniqueClasses = new Set(checkedInOnly.map((c) => c.course.title));
   const uniqueVenues = new Set(checkedInOnly.map((c) => c.course.venueName));
+  const uniqueDistricts = getUniqueDistricts(checkedInOnly);
   const uniqueCities = new Set(checkedInOnly.map((c) => c.course.cityName));
-  const uniqueDistricts = new Set(checkedInOnly.map((c) => c.course.districtName));
 
   // Time analysis with local time
   const timeOfDayCounts: { [key: string]: number } = {};
@@ -182,8 +178,8 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
   let totalDuration = 0;
 
   checkedInOnly.forEach((checkin) => {
-    const timeOfDay = getTimeOfDay(checkin.course.startDateTimeUTC);
     const localDate = new Date(checkin.course.startDateTimeUTC);
+    const timeOfDay = getTimeOfDay(checkin.course.startDateTimeUTC);
 
     const day = localDate.toLocaleDateString('en-US', { day: '2-digit' });
     const month = localDate.toLocaleDateString('en-US', { month: 'long' });
@@ -200,6 +196,8 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
     );
   });
 
+  const timeDistribution = calculateTimeDistribution(checkedInOnly);
+
   // Attendance analysis
   const totalLate = checkins.filter((c) => c.status === 'LATE').length;
   const totalNoShow = checkins.filter((c) => c.status === 'NOSHOW').length;
@@ -212,11 +210,15 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
 
   // Location analysis
   const cityCounts = countTop(checkedInOnly, (c) => c.course.cityName);
-  const districtCounts = countTop(checkedInOnly, (c) => c.course.districtName);
+  const districtCounts = countTop(
+    checkedInOnly,
+    (c) => `${c.course.cityName}/${c.course.districtName}`
+  );
 
-  // More stats
-  const timeDistribution = calculateTimeDistribution(checkedInOnly);
+  // Favorite category analysis
   const hoursInFavorite = calculateHoursInCategory(checkedInOnly, favoriteCategory);
+
+  // Recommendations
   const recommendations = generateRecommendations(checkedInOnly);
 
   return {
@@ -250,7 +252,9 @@ export const calculateStats = (checkins: Checkin[]): CheckinStats => {
         },
         distribution: timeDistribution,
       },
-      streaks: calculateStreaks(checkedInOnly),
+      streaks: {
+        longest: calculateLongestStreak(checkedInOnly),
+      },
       categories: {
         total: uniqueClasses.size,
         favorite: favoriteCategory,
