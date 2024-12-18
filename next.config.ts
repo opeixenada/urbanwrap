@@ -1,22 +1,12 @@
 import type { NextConfig } from 'next';
 
-const isGithubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES || false;
-
-let assetPrefix = '';
-let basePath = '';
-
-if (isGithubPages) {
-  assetPrefix = `/urbanwrap/`;
-  basePath = `/urbanwrap`;
-}
-
-const nextConfig: NextConfig = {
+const nextConfig = {
+  basePath: process.env.NODE_ENV === 'production' ? '/urbanwrap' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/urbanwrap/' : '',
   output: 'export',
-  assetPrefix: assetPrefix,
-  basePath: basePath,
   images: {
     unoptimized: true,
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
