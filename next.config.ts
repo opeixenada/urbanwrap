@@ -1,12 +1,8 @@
 import type { NextConfig } from 'next';
 
-const nextConfig = {
-  basePath: process.env.NODE_ENV === 'production' ? '/urbanwrap' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/urbanwrap/' : '',
-  output: 'export',
-  images: {
-    unoptimized: true,
-  },
+const nextConfig: NextConfig = {
+  // Enable React strict mode for better development experience
+  reactStrictMode: true,
 };
 
 module.exports = nextConfig;
