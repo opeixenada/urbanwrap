@@ -17,6 +17,10 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     hour: '2-digit',
     minute: '2-digit',
   });
+  const checkinTime = new Date(checkin.created).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   const getStatusDisplay = (status: string) => {
     switch (status) {
@@ -31,7 +35,19 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     }
   };
 
+  const getServiceTypeDisplay = (serviceType: string) => {
+    switch (serviceType) {
+      case 'free_training':
+        return { text: 'Free Training', bgColor: 'bg-yellow-500' };
+      case 'event':
+        return { text: 'Event', bgColor: 'bg-yellow-500' };
+      default:
+        return { text: serviceType, bgColor: 'bg-gray-500' };
+    }
+  };
+
   const statusInfo = getStatusDisplay(checkin.status);
+  const serviceTypeInfo = getServiceTypeDisplay(checkin.course.serviceType);
 
   return (
     <div className='bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden'>
@@ -55,6 +71,11 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
               In Person
             </span>
           )}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium text-white ${serviceTypeInfo.bgColor}`}
+          >
+            {serviceTypeInfo.text}
+          </span>
           {checkin.course.isPlusCheckin ? (
             <span className='bg-purple-500 text-white px-2 py-1 rounded-full text-xs'>Plus</span>
           ) : null}
@@ -79,9 +100,13 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
 
           <div className='flex items-center gap-2'>
             <Clock className='h-4 w-4' />
-            <span>
-              {startTime} - {endTime}
-            </span>
+            {checkin.course.serviceType === 'event' ? (
+              <span>
+                {startTime} - {endTime}
+              </span>
+            ) : (
+              <span>{checkinTime}</span>
+            )}
           </div>
 
           <div className='flex items-center gap-2'>
