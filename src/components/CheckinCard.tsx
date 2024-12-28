@@ -8,7 +8,7 @@ interface CheckinCardProps {
   checkin: Checkin;
 }
 
-const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
+export const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
   const startTime = new Date(checkin.course.startDateTimeUTC).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
@@ -95,7 +95,7 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
         <div className='space-y-2 text-sm text-gray-600 dark:text-gray-300'>
           <div className='flex items-center gap-2'>
             <Calendar className='h-4 w-4' />
-            <span>{new Date(checkin.created).toLocaleDateString()}</span>
+            <span>{new Date(checkin.course.date).toLocaleDateString()}</span>
           </div>
 
           <div className='flex items-center gap-2'>
@@ -131,5 +131,3 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     </div>
   );
 };
-
-export default CheckinCard;
