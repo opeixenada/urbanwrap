@@ -3,6 +3,7 @@
 import React from 'react';
 import { Calendar, Clock, MapPin, Tag } from 'lucide-react';
 import Checkin from '@/types/Checkin';
+import NextImage from 'next/image';
 
 interface CheckinCardProps {
   checkin: Checkin;
@@ -53,10 +54,11 @@ export const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     <div className='bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden'>
       <div className='relative h-48'>
         {checkin.course.covers?.[0]?.original ? (
-          <img
+          <NextImage
             src={checkin.course.covers[0].original}
             alt={checkin.course.title}
-            className='w-full h-full object-cover'
+            fill
+            className='object-cover'
           />
         ) : (
           <div className='w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
