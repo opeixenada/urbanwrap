@@ -6,7 +6,7 @@ export const useCheckins = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchCheckins = async (token: string, year: string) => {
+  const fetchCheckins = async (token: string, year: number) => {
     setLoading(true);
     setError('');
 
@@ -14,8 +14,7 @@ export const useCheckins = () => {
       let allRecords: Checkin[] = [];
       let page = 1;
       const pageSize = 10;
-      const requestedYear = parseInt(year);
-      const cutoffDate = new Date(requestedYear - 1, 12, 1); // December 1st of previous year
+      const cutoffDate = new Date(year - 1, 12, 1); // December 1st of previous year
 
       while (true) {
         const response = await fetch('/api/usc', {
@@ -43,7 +42,7 @@ export const useCheckins = () => {
 
         const processedRecords = data.data
           .filter((item: Checkin) => item.course)
-          .filter((item: Checkin) => new Date(item.course.date).getFullYear() === requestedYear);
+          .filter((item: Checkin) => new Date(item.course.date).getFullYear() === year);
 
         // Check if the last record is too old
         const lastRecord = data.data[data.data.length - 1];
