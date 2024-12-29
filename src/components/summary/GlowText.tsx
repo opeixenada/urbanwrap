@@ -2,7 +2,20 @@ import React from 'react';
 
 interface GlowTextProps {
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '7xl';
+  size?:
+    | 'xs'
+    | 'sm'
+    | 'base'
+    | 'lg'
+    | 'xl'
+    | '2xl'
+    | '3xl'
+    | '4xl'
+    | '5xl'
+    | '6xl'
+    | '7xl'
+    | '8xl'
+    | '9xl';
   className?: string;
 }
 
