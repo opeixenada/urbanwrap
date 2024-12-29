@@ -24,7 +24,7 @@ export const TabContent = ({ activeTab, onTabChange, checkins, onJsonView }: Tab
 
     {/* Summary tab content */}
     <div className={activeTab === 'summary' ? 'block' : 'hidden'}>
-      <YearSummary checkins={checkins} year={2024} /> {/* TODO: un-hardcode year */}
+      <YearSummary checkins={checkins} />
     </div>
 
     {/* Checkins tab content */}
