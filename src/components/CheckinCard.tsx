@@ -8,12 +8,16 @@ interface CheckinCardProps {
   checkin: Checkin;
 }
 
-const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
+export const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
   const startTime = new Date(checkin.course.startDateTimeUTC).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
   });
   const endTime = new Date(checkin.course.endDateTimeUTC).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const checkinTime = new Date(checkin.created).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
   });
@@ -31,7 +35,19 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     }
   };
 
+  const getServiceTypeDisplay = (serviceType: string) => {
+    switch (serviceType) {
+      case 'free_training':
+        return { text: 'Free Training', bgColor: 'bg-yellow-500' };
+      case 'event':
+        return { text: 'Event', bgColor: 'bg-yellow-500' };
+      default:
+        return { text: serviceType, bgColor: 'bg-gray-500' };
+    }
+  };
+
   const statusInfo = getStatusDisplay(checkin.status);
+  const serviceTypeInfo = getServiceTypeDisplay(checkin.course.serviceType);
 
   return (
     <div className='bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden'>
@@ -55,6 +71,11 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
               In Person
             </span>
           )}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium text-white ${serviceTypeInfo.bgColor}`}
+          >
+            {serviceTypeInfo.text}
+          </span>
           {checkin.course.isPlusCheckin ? (
             <span className='bg-purple-500 text-white px-2 py-1 rounded-full text-xs'>Plus</span>
           ) : null}
@@ -74,14 +95,18 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
         <div className='space-y-2 text-sm text-gray-600 dark:text-gray-300'>
           <div className='flex items-center gap-2'>
             <Calendar className='h-4 w-4' />
-            <span>{new Date(checkin.created).toLocaleDateString()}</span>
+            <span>{new Date(checkin.course.date).toLocaleDateString()}</span>
           </div>
 
           <div className='flex items-center gap-2'>
             <Clock className='h-4 w-4' />
-            <span>
-              {startTime} - {endTime}
-            </span>
+            {checkin.course.serviceType === 'event' ? (
+              <span>
+                {startTime} - {endTime}
+              </span>
+            ) : (
+              <span>{checkinTime}</span>
+            )}
           </div>
 
           <div className='flex items-center gap-2'>
@@ -106,5 +131,3 @@ const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     </div>
   );
 };
-
-export default CheckinCard;

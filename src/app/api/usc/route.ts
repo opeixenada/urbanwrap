@@ -20,6 +20,13 @@ export async function POST(request: Request) {
       },
     });
 
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: `HTTP error! Status: ${response.status}` },
+        { status: response.status }
+      );
+    }
+
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {

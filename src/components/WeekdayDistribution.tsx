@@ -4,8 +4,7 @@ interface WeekdayDistributionProps {
   distribution: { [key: string]: number };
 }
 
-const WeekdayDistribution = ({ distribution }: WeekdayDistributionProps) => {
-  // Helper to get all weekdays in order, starting with Sunday
+export const WeekdayDistribution = ({ distribution }: WeekdayDistributionProps) => {
   const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const maxPercentage = Math.max(...Object.values(distribution));
@@ -41,5 +40,3 @@ const WeekdayDistribution = ({ distribution }: WeekdayDistributionProps) => {
     </div>
   );
 };
-
-export default WeekdayDistribution;

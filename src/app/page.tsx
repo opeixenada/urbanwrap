@@ -1,5 +1,6 @@
-import USCCheckins from '@/components/USCCheckins';
+import React from 'react';
+import { USC } from '@/components/USC';
 
 export default function Home() {
-  return <USCCheckins />;
+  return <USC />;
 }

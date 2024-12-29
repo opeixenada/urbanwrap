@@ -9,7 +9,7 @@ interface JsonModalProps {
   data: unknown;
 }
 
-const JsonModal: React.FC<JsonModalProps> = ({ isOpen, onClose, data }) => {
+export const JsonModal: React.FC<JsonModalProps> = ({ isOpen, onClose, data }) => {
   if (!isOpen) return null;
 
   return (
@@ -33,5 +33,3 @@ const JsonModal: React.FC<JsonModalProps> = ({ isOpen, onClose, data }) => {
     </div>
   );
 };
-
-export default JsonModal;
