@@ -4,45 +4,71 @@ import React, { useState } from 'react';
 import Checkin from '@/types/Checkin';
 import { useCheckins } from '@/hooks/useCheckins';
 import { ErrorMessage } from '@/components/ErrorMessage';
-import { RecordCount } from '@/components/RecordCount';
 import { TabContent } from '@/components/TabContent';
-import { EmptyState } from '@/components/EmptyState';
 import { Header } from '@/components/Header';
-import { SearchForm } from '@/components/SearchForm';
+import { LoginForm } from '@/components/LoginForm';
 import { JsonModal } from '@/components/JsonModal';
 import { APP_CONFIG } from '@/config/constants';
+import { useLogin } from '@/hooks/useLogin';
+import { Loader2 } from 'lucide-react';
 
 export const USC = () => {
-  const [token, setToken] = useState('');
   const [selectedJson, setSelectedJson] = useState<Checkin | null>(null);
   const [activeTab, setActiveTab] = useState<'summary' | 'checkins'>('summary');
-  const { checkins, loading, error, fetchCheckins } = useCheckins();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const {
+    checkins,
+    isLoading: checkinsLoading,
+    error: checkinsError,
+    fetchCheckins,
+  } = useCheckins();
+  const { login, isLoading: loginLoading, error: loginError } = useLogin();
+
+  const handleLogin = async (credentials: { username: string; password: string }) => {
+    try {
+      const token = await login(credentials);
+      if (token) {
+        setIsAuthenticated(true);
+        await fetchCheckins(token, APP_CONFIG.summaryYear);
+      }
+    } catch (err) {
+      console.error('Login and fetch failed:', err);
+    }
+  };
 
   return (
-    <div className='container mx-auto p-4'>
-      <div className='mb-6'>
-        <Header />
-        <SearchForm
-          token={token}
-          loading={loading}
-          onTokenChange={setToken}
-          onSubmit={() => fetchCheckins(token, APP_CONFIG.summaryYear)}
-        />
+    <div className='min-h-screen'>
+      <div className='container mx-auto p-4'>
+        <div className='max-w-7xl mx-auto'>
+          <Header />
 
-        {error && <ErrorMessage error={error} />}
-        {checkins.length > 0 && <RecordCount count={checkins.length} />}
+          <div className='flex justify-center items-center'>
+            <div className='w-full max-w-md'>
+              {!isAuthenticated ? (
+                <LoginForm loading={loginLoading || checkinsLoading} onSubmit={handleLogin} />
+              ) : checkinsLoading ? (
+                <div className='flex items-center justify-center gap-2 text-gray-600'>
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                  <span>Loading checkins...</span>
+                </div>
+              ) : null}
+
+              {(loginError || checkinsError) && (
+                <ErrorMessage error={loginError || checkinsError} />
+              )}
+            </div>
+          </div>
+
+          {checkins.length > 0 ? (
+            <TabContent
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              checkins={checkins}
+              onJsonView={setSelectedJson}
+            />
+          ) : null}
+        </div>
       </div>
-
-      {checkins.length > 0 ? (
-        <TabContent
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          checkins={checkins}
-          onJsonView={setSelectedJson}
-        />
-      ) : (
-        !loading && <EmptyState />
-      )}
 
       <JsonModal
         isOpen={selectedJson !== null}

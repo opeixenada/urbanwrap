@@ -17,7 +17,7 @@ export const useCheckins = () => {
       const cutoffDate = new Date(year - 1, 12, 1); // December 1st of previous year
 
       while (true) {
-        const response = await fetch('/api/usc', {
+        const response = await fetch('/api/bookings', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -73,5 +73,5 @@ export const useCheckins = () => {
     }
   };
 
-  return { checkins, loading, error, fetchCheckins };
+  return { checkins, isLoading: loading, error, fetchCheckins };
 };
