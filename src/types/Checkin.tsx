@@ -21,7 +21,7 @@ interface Course {
   venueName: string;
   venueFullAddress: string;
   isPlusCheckin: number;
-  serviceType: 'event' | 'free_training' | string;
+  serviceType: 'event' | 'free_training' | 'hidden_free_training' | string;
   cityName: string;
   districtName: string;
   category: Category;

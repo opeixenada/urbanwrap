@@ -48,17 +48,17 @@ export const TimeOfDayCard: React.FC<SummaryCardProps> = ({ yearStats, gradientC
     {
       label: 'morning',
       icon: Sunrise,
-      count: yearStats.timeOfDayDistribution.morning,
+      count: yearStats.timeOfDayDistribution.morning || 0,
     },
     {
       label: 'afternoon',
       icon: Sun,
-      count: yearStats.timeOfDayDistribution.afternoon,
+      count: yearStats.timeOfDayDistribution.afternoon || 0,
     },
     {
       label: 'evening',
       icon: Sunset,
-      count: yearStats.timeOfDayDistribution.evening,
+      count: yearStats.timeOfDayDistribution.evening || 0,
     },
     {
       label: 'night',
