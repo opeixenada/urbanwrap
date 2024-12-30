@@ -8,9 +8,9 @@ import { TabContent } from '@/components/TabContent';
 import { Header } from '@/components/Header';
 import { LoginForm } from '@/components/LoginForm';
 import { JsonModal } from '@/components/JsonModal';
-import { APP_CONFIG } from '@/config/constants';
 import { useLogin } from '@/hooks/useLogin';
 import { Loader2 } from 'lucide-react';
+import { Config } from '@/config';
 
 export const USC = () => {
   const [selectedJson, setSelectedJson] = useState<Checkin | null>(null);
@@ -29,7 +29,7 @@ export const USC = () => {
       const token = await login(credentials);
       if (token) {
         setIsAuthenticated(true);
-        await fetchCheckins(token, APP_CONFIG.summaryYear);
+        await fetchCheckins(token, Config.SUMMARY_YEAR);
       }
     } catch (err) {
       console.error('Login and fetch failed:', err);
