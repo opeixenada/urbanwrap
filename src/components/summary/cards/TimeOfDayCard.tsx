@@ -82,7 +82,7 @@ export const TimeOfDayCard: React.FC<SummaryCardProps> = ({ yearStats, gradientC
             You were most active in the <GlowText>{mostActive.label}</GlowText>
           </CardText>
           <CardText>
-            when you made <GlowText>{mostActive.count}</GlowText> checkins
+            when you checked in <GlowText>{mostActive.count}</GlowText> times
           </CardText>
         </div>
 

@@ -20,7 +20,7 @@ export const MonthlyActivityCard: React.FC<SummaryCardProps> = ({ yearStats, gra
         <div className='flex flex-col items-center gap-2'>
           <GlowText size={'3xl'}>{topMonth}</GlowText>
           <CardText>
-            when you made <GlowText>{checkins}</GlowText> checkins
+            when you checked in <GlowText>{checkins}</GlowText> times
           </CardText>
         </div>
         <div className='w-full min-h-[12rem] relative mt-4'>
