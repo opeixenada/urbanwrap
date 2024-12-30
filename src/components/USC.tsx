@@ -37,37 +37,33 @@ export const USC = () => {
   };
 
   return (
-    <div className='min-h-screen'>
-      <div className='container mx-auto p-4'>
-        <div className='max-w-7xl mx-auto'>
-          <Header />
+    <div className='container flex-grow mx-auto p-4'>
+      <div className='max-w-7xl mx-auto'>
+        <Header />
 
-          <div className='flex justify-center items-center'>
-            <div className='w-full max-w-md'>
-              {!isAuthenticated ? (
-                <LoginForm loading={loginLoading || checkinsLoading} onSubmit={handleLogin} />
-              ) : checkinsLoading ? (
-                <div className='flex items-center justify-center gap-2 text-gray-600'>
-                  <Loader2 className='h-4 w-4 animate-spin' />
-                  <span>Loading checkins...</span>
-                </div>
-              ) : null}
+        <div className='flex justify-center items-center'>
+          <div className='w-full max-w-md'>
+            {!isAuthenticated ? (
+              <LoginForm loading={loginLoading || checkinsLoading} onSubmit={handleLogin} />
+            ) : checkinsLoading ? (
+              <div className='flex items-center justify-center gap-2 text-gray-600'>
+                <Loader2 className='h-4 w-4 animate-spin' />
+                <span>Loading checkins...</span>
+              </div>
+            ) : null}
 
-              {(loginError || checkinsError) && (
-                <ErrorMessage error={loginError || checkinsError} />
-              )}
-            </div>
+            {(loginError || checkinsError) && <ErrorMessage error={loginError || checkinsError} />}
           </div>
-
-          {checkins.length > 0 ? (
-            <TabContent
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              checkins={checkins}
-              onJsonView={setSelectedJson}
-            />
-          ) : null}
         </div>
+
+        {checkins.length > 0 ? (
+          <TabContent
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            checkins={checkins}
+            onJsonView={setSelectedJson}
+          />
+        ) : null}
       </div>
 
       <JsonModal
