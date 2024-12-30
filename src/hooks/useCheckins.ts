@@ -19,9 +19,7 @@ export const useCheckins = () => {
       while (true) {
         const response = await fetch('/api/bookings', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             token,
             page,

@@ -11,14 +11,14 @@ import { VenuesCard } from '@/components/summary/cards/VenuesCard';
 import { CoursesCard } from '@/components/summary/cards/CoursesCard';
 import { GeographyCard } from '@/components/summary/cards/GeographyCard';
 import { getGradient } from '@/utils/gradients';
-import { APP_CONFIG } from '@/config/constants';
+import { Config } from '@/config';
 
 interface YearSummaryProps {
   checkins: Checkin[];
 }
 
 export const YearSummary: React.FC<YearSummaryProps> = ({ checkins }) => {
-  const yearStats = convertToYearStats(checkins, APP_CONFIG.summaryYear);
+  const yearStats = convertToYearStats(checkins, Config.SUMMARY_YEAR);
 
   return (
     <div className='grid gap-6 xl:grid-cols-3 lg:grid-cols-2 mx-auto'>

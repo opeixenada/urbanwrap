@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { Config } from '@/config';
 
 export async function POST(request: Request) {
   try {
@@ -10,13 +11,10 @@ export async function POST(request: Request) {
       page: page.toString(),
     });
 
-    const response = await fetch(`https://api.urbansportsclub.com/api/v6/bookings?${params}`, {
+    const response = await fetch(`${Config.USC_API_HOST}/api/v6/bookings?${params}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'User-Agent': 'curl/8.6.0',
-        Host: 'api.urbansportsclub.com',
       },
     });
 

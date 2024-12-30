@@ -1,42 +1,25 @@
 import { NextResponse } from 'next/server';
+import { Config } from '@/config';
 
 export async function POST(request: Request) {
   try {
-    console.log(`Will try auth`);
-
     const { username, password } = await request.json();
 
-    const clientId = process.env.USC_CLIENT_ID;
-    const clientSecret = process.env.USC_CLIENT_SECRET;
-
-    const response = await fetch('https://api.urbansportsclub.com/api/v7/auth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'User-Agent': 'curl/8.6.0',
-        Host: 'api.urbansportsclub.com',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        grant_type: 'password',
-        client_id: clientId,
-        client_secret: clientSecret,
-      }),
+    const formData = new URLSearchParams({
+      username: username,
+      password: password,
+      grant_type: 'password',
+      client_id: Config.USC_CLIENT_ID,
+      client_secret: Config.USC_CLIENT_SECRET,
     });
 
-    console.log(
-      `Auth request: `,
-      JSON.stringify({
-        username,
-        password,
-        grant_type: 'password',
-        client_id: clientId,
-        client_secret: clientSecret,
-      })
-    );
-    console.log(`Auth response: `, response);
+    const response = await fetch(`${Config.USC_API_HOST}/api/v6/auth/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+    });
 
     if (!response.ok) {
       return NextResponse.json(
