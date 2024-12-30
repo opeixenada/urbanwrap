@@ -19,9 +19,11 @@ export const GeographyCard: React.FC<SummaryCardProps> = ({ yearStats, gradientC
           <GlowText size={'3xl'}>{yearStats.locations.topDistrict}</GlowText>
         </div>
 
-        <CardText className='mt-6'>
-          You also traveled to {formatNotableMentions(yearStats.locations.notableMentions)}
-        </CardText>
+        {yearStats.locations.notableMentions && yearStats.locations.notableMentions.length > 0 && (
+          <CardText className='mt-6'>
+            You also traveled to {formatNotableMentions(yearStats.locations.notableMentions)}
+          </CardText>
+        )}
       </div>
     </StatsCard>
   );

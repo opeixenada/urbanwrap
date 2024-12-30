@@ -40,6 +40,8 @@ export const CheckinCard: React.FC<CheckinCardProps> = ({ checkin }) => {
     switch (serviceType) {
       case 'free_training':
         return { text: 'Free Training', bgColor: 'bg-yellow-500' };
+      case 'hidden_free_training':
+        return { text: 'Free Training', bgColor: 'bg-yellow-500' };
       case 'event':
         return { text: 'Event', bgColor: 'bg-yellow-500' };
       default:

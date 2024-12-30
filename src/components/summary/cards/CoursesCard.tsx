@@ -21,9 +21,11 @@ export const CoursesCard: React.FC<SummaryCardProps> = ({ yearStats, gradientCla
           <CardText>was your favorite</CardText>
         </div>
 
-        <CardText className='mt-6'>
-          You also loved {formatNotableMentions(yearStats.courses.notableMentions)}
-        </CardText>
+        {yearStats.courses.notableMentions && yearStats.courses.notableMentions.length > 0 && (
+          <CardText className='mt-6'>
+            You also loved {formatNotableMentions(yearStats.courses.notableMentions)}
+          </CardText>
+        )}
       </div>
     </StatsCard>
   );

@@ -84,7 +84,10 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
 
   // Separate events and free training
   const events = validCheckins.filter((c) => c.course.serviceType === 'event');
-  const freeTraining = validCheckins.filter((c) => c.course.serviceType === 'free_training');
+  const freeTraining = validCheckins.filter(
+    (c) =>
+      c.course.serviceType === 'free_training' || c.course.serviceType === 'hidden_free_training'
+  );
 
   // Calculate total hours
   const eventHours = Math.floor(
