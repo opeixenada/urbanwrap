@@ -13,7 +13,7 @@ export const useCheckins = () => {
     try {
       let allRecords: Checkin[] = [];
       let page = 1;
-      const pageSize = 10;
+      const pageSize = 100;
       const cutoffDate = new Date(year - 1, 12, 1); // December 1st of previous year
 
       while (true) {

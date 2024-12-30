@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Checkin from '@/types/Checkin';
 import { useCheckins } from '@/hooks/useCheckins';
+import { useProfile } from '@/hooks/useProfile';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { TabContent } from '@/components/TabContent';
 import { Header } from '@/components/Header';
@@ -16,12 +17,16 @@ export const USC = () => {
   const [selectedJson, setSelectedJson] = useState<Checkin | null>(null);
   const [activeTab, setActiveTab] = useState<'summary' | 'checkins'>('summary');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const {
     checkins,
     isLoading: checkinsLoading,
     error: checkinsError,
     fetchCheckins,
   } = useCheckins();
+
+  const { profile, isLoading: profileLoading, error: profileError, fetchProfile } = useProfile();
+
   const { login, isLoading: loginLoading, error: loginError } = useLogin();
 
   const handleLogin = async (credentials: { username: string; password: string }) => {
@@ -29,6 +34,7 @@ export const USC = () => {
       const token = await login(credentials);
       if (token) {
         setIsAuthenticated(true);
+        await fetchProfile(token);
         await fetchCheckins(token, Config.SUMMARY_YEAR);
       }
     } catch (err) {
@@ -36,23 +42,25 @@ export const USC = () => {
     }
   };
 
+  const isLoading = loginLoading || profileLoading || checkinsLoading;
+  const error = loginError || profileError || checkinsError;
+
   return (
     <div className='container flex-grow mx-auto p-4'>
       <div className='max-w-7xl mx-auto'>
-        <Header />
-
+        <Header firstName={profile?.firstName} />
         <div className='flex justify-center items-center'>
           <div className='w-full max-w-md'>
             {!isAuthenticated ? (
-              <LoginForm loading={loginLoading || checkinsLoading} onSubmit={handleLogin} />
-            ) : checkinsLoading ? (
+              <LoginForm loading={isLoading} onSubmit={handleLogin} />
+            ) : isLoading ? (
               <div className='flex items-center justify-center gap-2 text-gray-600'>
                 <Loader2 className='h-4 w-4 animate-spin' />
-                <span>Loading checkins...</span>
+                <span>Loading data...</span>
               </div>
             ) : null}
 
-            {(loginError || checkinsError) && <ErrorMessage error={loginError || checkinsError} />}
+            {error && <ErrorMessage error={error} />}
           </div>
         </div>
 
