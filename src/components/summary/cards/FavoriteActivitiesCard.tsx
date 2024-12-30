@@ -28,8 +28,8 @@ export const FavoriteActivitiesCard: React.FC<SummaryCardProps> = ({
         </div>
 
         <CardText className='mt-6'>
-          You made <GlowText>{yearStats.categories.favoriteCheckins}</GlowText>{' '}
-          {yearStats.categories.favorite} checkins
+          You did {yearStats.categories.favorite}{' '}
+          <GlowText>{yearStats.categories.favoriteCheckins}</GlowText> times
         </CardText>
 
         <CardText className='mt-6'>

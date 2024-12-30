@@ -15,9 +15,9 @@ export const OverviewCard: React.FC<SummaryCardProps> = ({ yearStats, gradientCl
         </CardTitle>
 
         <div className='flex flex-col items-center gap-2'>
-          <CardText>Congratulations! You made...</CardText>
+          <CardText>Congratulations! You checked in...</CardText>
           <GlowText size='7xl'>{yearStats.checkins.total}</GlowText>
-          <CardText emphasis>checkins</CardText>
+          <CardText emphasis>times</CardText>
         </div>
 
         <CardText className='mt-6'>Well done!</CardText>

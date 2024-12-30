@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'UrbanWrap',
-  description: 'Your Urban Sports checkins wrapped 🎁',
+  description: 'Your Urban Sports wrapped 🎁',
 };
 
 export default function RootLayout({
