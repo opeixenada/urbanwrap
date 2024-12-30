@@ -1,3 +1,3 @@
-**🚧 Under Construction 🚧**
+Your personal sports year in review — like Spotify Wrapped but for Urban Sports!
 
-Your personal sports year in review — like Spotify Wrapped but for sports!
+It doesn't work without a little bit of magic tho ✨
