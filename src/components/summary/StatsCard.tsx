@@ -13,6 +13,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({ gradientClass, children })
         ${gradientClass}
         rounded-xl p-8 shadow-lg 
         flex flex-col items-center text-center h-full
+        text-white
       `}
     >
       {children}
