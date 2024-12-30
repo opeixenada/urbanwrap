@@ -6,6 +6,14 @@ import React from 'react';
  * @returns A React-compatible array of spans with proper comma, Oxford comma, and 'and' placement
  */
 export const formatNotableMentions = (mentions: string[]): React.ReactNode[] => {
+  if (mentions.length === 1) {
+    return [
+      <span key={mentions[0]}>
+        <span className='font-bold'>{mentions[0]}</span>
+      </span>,
+    ];
+  }
+
   return mentions.map((mention, index, array) => {
     if (index === array.length - 1) {
       return (

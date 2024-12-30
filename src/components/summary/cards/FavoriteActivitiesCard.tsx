@@ -32,9 +32,12 @@ export const FavoriteActivitiesCard: React.FC<SummaryCardProps> = ({
           <GlowText>{yearStats.categories.favoriteCheckins}</GlowText> times
         </CardText>
 
-        <CardText className='mt-6'>
-          You were also into {formatNotableMentions(yearStats.categories.notableMentions)}
-        </CardText>
+        {yearStats.categories.notableMentions &&
+          yearStats.categories.notableMentions.length > 0 && (
+            <CardText className='mt-6'>
+              You were also into {formatNotableMentions(yearStats.categories.notableMentions)}
+            </CardText>
+          )}
       </div>
     </StatsCard>
   );

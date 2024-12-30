@@ -21,9 +21,11 @@ export const VenuesCard: React.FC<SummaryCardProps> = ({ yearStats, gradientClas
           <CardText>was your favorite</CardText>
         </div>
 
-        <CardText className='mt-6'>
-          You were also a regular at {formatNotableMentions(yearStats.venues.notableMentions)}
-        </CardText>
+        {yearStats.venues.notableMentions && yearStats.venues.notableMentions.length > 0 && (
+          <CardText className='mt-6'>
+            You were also a regular at {formatNotableMentions(yearStats.venues.notableMentions)}
+          </CardText>
+        )}
       </div>
     </StatsCard>
   );
