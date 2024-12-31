@@ -37,6 +37,10 @@ export const MonthlyActivityCard: React.FC<SummaryCardProps> = ({ yearStats, gra
                 dataKey='month'
                 tick={{ fill: 'rgba(255, 255, 255, 0.5)', fontSize: 12 }}
                 tickFormatter={(value) => value.slice(0, 3)}
+                interval={0}
+                angle={-45}
+                textAnchor='end'
+                height={60}
                 axisLine={{ stroke: 'rgba(255, 255, 255, 0.5)' }}
                 tickLine={{ stroke: 'rgba(255, 255, 255, 0.5)' }}
               />
