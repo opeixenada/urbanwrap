@@ -25,7 +25,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/indefinite": "^2.3.4",
-    "@types/lodash": "^4.17.13",
+    "@types/lodash": "^4.17.14",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
