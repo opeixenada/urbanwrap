@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 interface Category {
   id: number;
@@ -21,7 +21,7 @@ interface Course {
   venueName: string;
   venueFullAddress: string;
   isPlusCheckin: number;
-  serviceType: 'event' | 'free_training' | 'hidden_free_training' | string;
+  serviceType: "event" | "free_training" | "hidden_free_training" | string;
   cityName: string;
   districtName: string;
   category: Category;
@@ -32,7 +32,7 @@ interface Checkin {
   id: number;
   created: string;
   updated: string;
-  status: 'CHECKEDIN' | 'LATE' | 'NOSHOW' | string;
+  status: "CHECKEDIN" | "LATE" | "NOSHOW" | string;
   course: Course;
 }
 

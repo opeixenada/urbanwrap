@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { Profile } from '@/types/Profile';
-import { makeApiRequest } from '@/utils/apiUtils';
+import { NextResponse } from "next/server";
+import { Profile } from "@/types/Profile";
+import { makeApiRequest } from "@/utils/apiUtils";
 
 interface ApiResponse {
   success: string;
@@ -14,8 +14,8 @@ interface ErrorResponse {
 export async function POST(request: Request): Promise<NextResponse<ApiResponse | ErrorResponse>> {
   const { token } = await request.json();
 
-  return makeApiRequest('/api/v6/customers/me', {
-    method: 'GET',
+  return makeApiRequest("/api/v6/customers/me", {
+    method: "GET",
     token,
   });
 }

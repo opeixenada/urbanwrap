@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface LoginCredentials {
   username: string;
@@ -14,22 +14,22 @@ export const useLogin = () => {
     setError(null);
 
     try {
-      const authResponse = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const authResponse = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
 
       const authData = await authResponse.json();
 
       if (!authData.success) {
-        setError(authData.error || 'Authentication failed');
+        setError(authData.error || "Authentication failed");
         return;
       }
 
       return authData.data.access_token;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Login failed';
+      const message = err instanceof Error ? err.message : "Login failed";
       setError(message);
       return Promise.reject(err);
     } finally {

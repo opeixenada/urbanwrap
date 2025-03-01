@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 export interface StreakInfo {
   length: number;

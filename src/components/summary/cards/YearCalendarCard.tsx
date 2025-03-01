@@ -1,28 +1,28 @@
-import React from 'react';
-import { Calendar } from 'lucide-react';
-import { YearStats } from '@/types/YearStats';
-import { StatsCard } from '@/components/summary/StatsCard';
-import { CardTitle } from '@/components/summary/CardTitle';
-import { CardText } from '@/components/summary/CardText';
-import { SummaryCardProps } from '@/components/summary/SummaryCardProps';
-import { GlowText } from '@/components/summary/GlowText';
+import React from "react";
+import { Calendar } from "lucide-react";
+import { YearStats } from "@/types/YearStats";
+import { StatsCard } from "@/components/summary/StatsCard";
+import { CardTitle } from "@/components/summary/CardTitle";
+import { CardText } from "@/components/summary/CardText";
+import { SummaryCardProps } from "@/components/summary/SummaryCardProps";
+import { GlowText } from "@/components/summary/GlowText";
 
 const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
-const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
 interface CalendarDayProps {
   day: number;
@@ -30,20 +30,17 @@ interface CalendarDayProps {
 }
 
 const CalendarDay: React.FC<CalendarDayProps> = ({ day, isActive }) => {
-  if (day === -1) return <div className='invisible w-3 h-3' />;
+  if (day === -1) return <div className="invisible h-3 w-3" />;
 
   return (
     <div
-      className={`
-        relative w-3 h-3 flex items-center justify-center text-[0.6rem]
-        ${
-          isActive
-            ? 'font-semibold text-white/70 [text-shadow:0_0_5px_rgba(255,255,255,1),0_0_10px_rgba(255,255,255,0.5)]'
-            : 'text-white/50'
-        }
-      `}
+      className={`relative flex h-3 w-3 items-center justify-center text-[0.6rem] ${
+        isActive
+          ? "font-semibold text-white/70 [text-shadow:0_0_5px_rgba(255,255,255,1),0_0_10px_rgba(255,255,255,0.5)]"
+          : "text-white/50"
+      } `}
     >
-      {day > 0 ? day : ''}
+      {day > 0 ? day : ""}
     </div>
   );
 };
@@ -79,11 +76,11 @@ const MonthCalendar: React.FC<MonthCalendarProps> = ({ month, days, year }) => {
   }
 
   return (
-    <div className='flex-1'>
-      <h3 className='text-xs font-medium text-white/90 mb-1'>{month}</h3>
-      <div className='grid grid-cols-7 gap-px'>
+    <div className="flex-1">
+      <h3 className="mb-1 text-xs font-medium text-white/90">{month}</h3>
+      <div className="grid grid-cols-7 gap-px">
         {WEEKDAYS.map((day, i) => (
-          <div key={i} className='text-xs text-white text-opacity-80 text-center'>
+          <div key={i} className="text-opacity-80 text-center text-xs text-white">
             {day}
           </div>
         ))}
@@ -94,7 +91,7 @@ const MonthCalendar: React.FC<MonthCalendarProps> = ({ month, days, year }) => {
               day={day || -1}
               isActive={day && days.includes(day)}
             />
-          ))
+          )),
         )}
       </div>
     </div>
@@ -107,7 +104,7 @@ interface MonthRowProps {
 }
 
 const MonthRow: React.FC<MonthRowProps> = ({ months, yearStats }) => (
-  <div className='grid grid-cols-3 gap-4'>
+  <div className="grid grid-cols-3 gap-4">
     {months.map((month) => (
       <MonthCalendar
         key={month}
@@ -122,7 +119,7 @@ const MonthRow: React.FC<MonthRowProps> = ({ months, yearStats }) => (
 export const YearCalendarCard: React.FC<SummaryCardProps> = ({ yearStats, gradientClass }) => {
   const totalDays = Object.values(yearStats.daysOfMonth).reduce(
     (sum, days) => sum + days.length,
-    0
+    0,
   );
 
   // Group months into rows of 3
@@ -135,15 +132,15 @@ export const YearCalendarCard: React.FC<SummaryCardProps> = ({ yearStats, gradie
 
   return (
     <StatsCard gradientClass={gradientClass}>
-      <div className='flex flex-col items-center mb-6'>
-        <CardTitle icon={<Calendar className='w-6 h-6' />}>Your active days</CardTitle>
+      <div className="mb-6 flex flex-col items-center">
+        <CardTitle icon={<Calendar className="h-6 w-6" />}>Your active days</CardTitle>
 
         <CardText>
           You used USC on <GlowText>{totalDays}</GlowText> days
         </CardText>
       </div>
 
-      <div className='flex flex-col gap-6'>
+      <div className="flex flex-col gap-6">
         {monthRows.map((months, index) => (
           <MonthRow key={index} months={months} yearStats={yearStats} />
         ))}

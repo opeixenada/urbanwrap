@@ -1,4 +1,4 @@
-import { YearStats } from '@/types/YearStats';
+import { YearStats } from "@/types/YearStats";
 
 export interface SummaryCardProps {
   yearStats: YearStats;

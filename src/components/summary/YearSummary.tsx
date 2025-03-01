@@ -1,17 +1,17 @@
-import React from 'react';
-import Checkin from '@/types/Checkin';
-import { convertToYearStats } from '@/utils/yearStats';
-import { YearCalendarCard } from '@/components/summary/cards/YearCalendarCard';
-import { TimeOfDayCard } from '@/components/summary/cards/TimeOfDayCard';
-import { OverviewCard } from '@/components/summary/cards/OverviewCard';
-import { ActivitySummaryCard } from '@/components/summary/cards/ActivitySummaryCard';
-import { FavoriteActivitiesCard } from '@/components/summary/cards/FavoriteActivitiesCard';
-import { MonthlyActivityCard } from '@/components/summary/cards/MonthlyActivityCard';
-import { VenuesCard } from '@/components/summary/cards/VenuesCard';
-import { CoursesCard } from '@/components/summary/cards/CoursesCard';
-import { GeographyCard } from '@/components/summary/cards/GeographyCard';
-import { getGradient } from '@/utils/gradients';
-import { Config } from '@/config';
+import React from "react";
+import Checkin from "@/types/Checkin";
+import { convertToYearStats } from "@/utils/yearStats";
+import { YearCalendarCard } from "@/components/summary/cards/YearCalendarCard";
+import { TimeOfDayCard } from "@/components/summary/cards/TimeOfDayCard";
+import { OverviewCard } from "@/components/summary/cards/OverviewCard";
+import { ActivitySummaryCard } from "@/components/summary/cards/ActivitySummaryCard";
+import { FavoriteActivitiesCard } from "@/components/summary/cards/FavoriteActivitiesCard";
+import { MonthlyActivityCard } from "@/components/summary/cards/MonthlyActivityCard";
+import { VenuesCard } from "@/components/summary/cards/VenuesCard";
+import { CoursesCard } from "@/components/summary/cards/CoursesCard";
+import { GeographyCard } from "@/components/summary/cards/GeographyCard";
+import { getGradient } from "@/utils/gradients";
+import { Config } from "@/config";
 
 interface YearSummaryProps {
   checkins: Checkin[];
@@ -21,7 +21,7 @@ export const YearSummary: React.FC<YearSummaryProps> = ({ checkins }) => {
   const yearStats = convertToYearStats(checkins, Config.SUMMARY_YEAR);
 
   return (
-    <div className='grid gap-6 xl:grid-cols-3 lg:grid-cols-2 mx-auto'>
+    <div className="mx-auto grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
       <OverviewCard yearStats={yearStats} gradientClass={getGradient(0)} />
       <ActivitySummaryCard yearStats={yearStats} gradientClass={getGradient(1)} />
       <FavoriteActivitiesCard yearStats={yearStats} gradientClass={getGradient(2)} />

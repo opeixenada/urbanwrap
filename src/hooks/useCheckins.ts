@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import Checkin from '@/types/Checkin';
+import { useState } from "react";
+import Checkin from "@/types/Checkin";
 
 export const useCheckins = () => {
   const [checkins, setCheckins] = useState<Checkin[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const fetchCheckins = async (token: string, year: number) => {
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       let allRecords: Checkin[] = [];
@@ -17,9 +17,9 @@ export const useCheckins = () => {
       const cutoffDate = new Date(year - 1, 12, 1); // December 1st of previous year
 
       while (true) {
-        const response = await fetch('/api/bookings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             token,
             page,
@@ -60,11 +60,11 @@ export const useCheckins = () => {
 
       // Sort by date descending
       allRecords.sort(
-        (a, b) => new Date(b.course.date).getTime() - new Date(a.course.date).getTime()
+        (a, b) => new Date(b.course.date).getTime() - new Date(a.course.date).getTime(),
       );
       setCheckins(allRecords);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       setError(errorMessage);
     } finally {
       setLoading(false);

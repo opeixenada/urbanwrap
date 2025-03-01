@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CardTitleProps {
   children: React.ReactNode;
@@ -6,12 +6,12 @@ interface CardTitleProps {
   className?: string;
 }
 
-export const CardTitle: React.FC<CardTitleProps> = ({ children, icon, className = '' }) => {
+export const CardTitle: React.FC<CardTitleProps> = ({ children, icon, className = "" }) => {
   return (
     <h2
-      className={`text-2xl font-bold text-white text-center flex items-center gap-3 justify-center mb-4 ${className}`}
+      className={`mb-4 flex items-center justify-center gap-3 text-center text-2xl font-bold text-white ${className}`}
     >
-      {icon && <div className='text-white/90'>{icon}</div>}
+      {icon && <div className="text-white/90">{icon}</div>}
       {children}
     </h2>
   );
