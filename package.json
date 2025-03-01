@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.0.9",
     "@types/indefinite": "^2.3.4",
     "@types/lodash": "^4.17.14",
     "@types/node": "^22",
