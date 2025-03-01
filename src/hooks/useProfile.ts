@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Profile } from '@/types/Profile';
+import { useState } from "react";
+import { Profile } from "@/types/Profile";
 
 interface ApiResponse {
   success: string;
@@ -10,16 +10,16 @@ interface ApiResponse {
 export const useProfile = () => {
   const [profile, setProfile] = useState<Profile>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const fetchProfile = async (token: string) => {
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/me', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/me", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       });
 
@@ -32,7 +32,7 @@ export const useProfile = () => {
 
       setProfile(data.data);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       setError(errorMessage);
     } finally {
       setLoading(false);

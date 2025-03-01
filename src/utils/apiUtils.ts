@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { Config } from '@/config';
+import { NextResponse } from "next/server";
+import { Config } from "@/config";
 
-type ApiMethod = 'GET' | 'POST';
+type ApiMethod = "GET" | "POST";
 
 interface RequestOptions {
   method: ApiMethod;
@@ -12,14 +12,14 @@ interface RequestOptions {
 }
 
 export async function makeApiRequest(endpoint: string, options: RequestOptions) {
-  const url = `${Config.USC_API_HOST}${endpoint}${options.params ? `?${options.params}` : ''}`;
+  const url = `${Config.USC_API_HOST}${endpoint}${options.params ? `?${options.params}` : ""}`;
 
   const headers: Record<string, string> = {};
   if (options.token) {
     headers.Authorization = `Bearer ${options.token}`;
   }
   if (options.contentType) {
-    headers['Content-Type'] = options.contentType;
+    headers["Content-Type"] = options.contentType;
   }
 
   try {
@@ -32,14 +32,14 @@ export async function makeApiRequest(endpoint: string, options: RequestOptions) 
     if (!response.ok) {
       return NextResponse.json(
         { error: `HTTP error! Status: ${response.status}` },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

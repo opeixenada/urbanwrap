@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CardTextProps {
   children: React.ReactNode;
@@ -9,17 +9,9 @@ interface CardTextProps {
 export const CardText: React.FC<CardTextProps> = ({
   children,
   emphasis = false,
-  className = '',
+  className = "",
 }) => {
   return (
-    <p
-      className={`
-      text-lg 
-      ${emphasis ? 'font-bold' : 'font-medium'}
-      ${className}
-    `}
-    >
-      {children}
-    </p>
+    <p className={`text-lg ${emphasis ? "font-bold" : "font-medium"} ${className} `}>{children}</p>
   );
 };

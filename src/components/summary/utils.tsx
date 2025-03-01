@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Formats an array of notable mentions into a readable string with proper grammatical formatting
@@ -9,7 +9,7 @@ export const formatNotableMentions = (mentions: string[]): React.ReactNode[] => 
   if (mentions.length === 1) {
     return [
       <span key={mentions[0]}>
-        <span className='font-bold'>{mentions[0]}</span>
+        <span className="font-bold">{mentions[0]}</span>
       </span>,
     ];
   }
@@ -18,21 +18,21 @@ export const formatNotableMentions = (mentions: string[]): React.ReactNode[] => 
     if (index === array.length - 1) {
       return (
         <span key={mention}>
-          and <span className='font-bold'>{mention}</span>
+          and <span className="font-bold">{mention}</span>
         </span>
       );
     }
     if (index === array.length - 2) {
       return (
         <span key={mention}>
-          <span className='font-bold'>{mention}</span>
-          {array.length > 2 ? ',' : ''}{' '}
+          <span className="font-bold">{mention}</span>
+          {array.length > 2 ? "," : ""}{" "}
         </span>
       );
     }
     return (
       <span key={mention}>
-        <span className='font-bold'>{mention}</span>,{' '}
+        <span className="font-bold">{mention}</span>,{" "}
       </span>
     );
   });

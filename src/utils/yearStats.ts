@@ -1,7 +1,7 @@
-import { countBy, groupBy, maxBy } from 'lodash';
-import Checkin from '@/types/Checkin';
-import { StreakInfo, YearStats } from '@/types/YearStats';
-import { monthOrder } from '@/utils/utils';
+import { countBy, groupBy, maxBy } from "lodash";
+import Checkin from "@/types/Checkin";
+import { StreakInfo, YearStats } from "@/types/YearStats";
+import { monthOrder } from "@/utils/utils";
 
 // Helper function to calculate hours between two UTC dates
 const getHoursBetween = (start: string, end: string): number => {
@@ -14,10 +14,10 @@ const getHoursBetween = (start: string, end: string): number => {
 // Helper function to get time of day category
 const getTimeOfDay = (date: Date): string => {
   const hour = date.getHours();
-  if (hour >= 5 && hour < 12) return 'morning';
-  if (hour >= 12 && hour < 17) return 'afternoon';
-  if (hour >= 17 && hour < 21) return 'evening';
-  return 'night';
+  if (hour >= 5 && hour < 12) return "morning";
+  if (hour >= 12 && hour < 17) return "afternoon";
+  if (hour >= 17 && hour < 21) return "evening";
+  return "night";
 };
 
 const calculateStreak = (dates: Date[]): StreakInfo => {
@@ -35,7 +35,7 @@ const calculateStreak = (dates: Date[]): StreakInfo => {
   for (let i = 1; i < sortedDates.length; i++) {
     const currentDate = sortedDates[i];
     const diffDays = Math.floor(
-      (currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24)
+      (currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24),
     );
 
     if (diffDays === 1) {
@@ -79,21 +79,21 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
   // Filter checkins for the specified year and CHECKEDIN status
   const validCheckins = checkins.filter((checkin) => {
     const checkinDate = new Date(checkin.course.date);
-    return checkinDate.getFullYear() === year && checkin.status === 'CHECKEDIN';
+    return checkinDate.getFullYear() === year && checkin.status === "CHECKEDIN";
   });
 
   // Separate events and free training
-  const events = validCheckins.filter((c) => c.course.serviceType === 'event');
+  const events = validCheckins.filter((c) => c.course.serviceType === "event");
   const freeTraining = validCheckins.filter(
     (c) =>
-      c.course.serviceType === 'free_training' || c.course.serviceType === 'hidden_free_training'
+      c.course.serviceType === "free_training" || c.course.serviceType === "hidden_free_training",
   );
 
   // Calculate total hours
   const eventHours = Math.floor(
     events.reduce((total, event) => {
       return total + getHoursBetween(event.course.startDateTimeUTC, event.course.endDateTimeUTC);
-    }, 0)
+    }, 0),
   );
 
   // Group by categories
@@ -118,11 +118,11 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
 
   // Time distributions
   const weekDayDist: Record<string, number> = countBy(validCheckins, (c) => {
-    return new Date(c.course.date).toLocaleDateString('en-US', { weekday: 'long' });
+    return new Date(c.course.date).toLocaleDateString("en-US", { weekday: "long" });
   });
 
   const timeOfDayDist: Record<string, number> = countBy(validCheckins, (c) => {
-    const timestamp = c.course.serviceType === 'event' ? c.course.startDateTimeUTC : c.created;
+    const timestamp = c.course.serviceType === "event" ? c.course.startDateTimeUTC : c.created;
     return getTimeOfDay(new Date(timestamp));
   });
 
@@ -132,12 +132,12 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
       acc[month] = 0;
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
 
   // Count the actual checkins
   validCheckins.forEach((c) => {
-    const month = new Date(c.course.date).toLocaleDateString('en-US', { month: 'long' });
+    const month = new Date(c.course.date).toLocaleDateString("en-US", { month: "long" });
     monthlyDist[month]++;
   });
 
@@ -145,7 +145,7 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
   const daysOfMonth: Record<string, number[]> = {};
   validCheckins.forEach((checkin) => {
     const date = new Date(checkin.course.startDateTimeUTC);
-    const month = date.toLocaleDateString('en-US', { month: 'long' });
+    const month = date.toLocaleDateString("en-US", { month: "long" });
     if (!daysOfMonth[month]) daysOfMonth[month] = [];
     daysOfMonth[month].push(date.getDate());
     daysOfMonth[month].sort((a, b) => a - b);
@@ -169,8 +169,8 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
     },
     categories: {
       count: categoryCount,
-      favorite: favoriteCategory ? favoriteCategory[0] : '',
-      favoriteIcon: favoriteCategory ? favoriteCategory[1][0].course.category.icon : '',
+      favorite: favoriteCategory ? favoriteCategory[0] : "",
+      favoriteIcon: favoriteCategory ? favoriteCategory[1][0].course.category.icon : "",
       favoriteCheckins: favoriteCategoryCheckins,
       notableMentions: favoriteCategory
         ? getNotableMentions(categoryGroups, favoriteCategory[0])
@@ -178,20 +178,20 @@ export const convertToYearStats = (checkins: Checkin[], year: number): YearStats
     },
     courses: {
       count: courseCount,
-      favorite: favoriteCourse ? favoriteCourse[0] : '',
+      favorite: favoriteCourse ? favoriteCourse[0] : "",
       favoriteCover:
         favoriteCourse && favoriteCourse[1][0].course.covers?.length
           ? favoriteCourse[1][0].course.covers[0].original
-          : '',
+          : "",
       notableMentions: favoriteCourse ? getNotableMentions(courseGroups, favoriteCourse[0]) : [],
     },
     venues: {
       count: venueCount,
-      favorite: favoriteVenue ? favoriteVenue[0] : '',
+      favorite: favoriteVenue ? favoriteVenue[0] : "",
       notableMentions: favoriteVenue ? getNotableMentions(venueGroups, favoriteVenue[0]) : [],
     },
     locations: {
-      topDistrict: topDistrict ? topDistrict[0] : '',
+      topDistrict: topDistrict ? topDistrict[0] : "",
       notableMentions: topDistrict ? getNotableMentions(districtGroups, topDistrict[0]) : [],
     },
     weekDayDistribution: weekDayDist,
