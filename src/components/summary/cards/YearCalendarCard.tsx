@@ -83,7 +83,7 @@ const MonthCalendar: React.FC<MonthCalendarProps> = ({ month, days, year }) => {
       <h3 className='text-xs font-medium text-white/90 mb-1'>{month}</h3>
       <div className='grid grid-cols-7 gap-px'>
         {WEEKDAYS.map((day, i) => (
-          <div key={i} className='text-[0.6rem] text-white/80 text-center'>
+          <div key={i} className='text-xs text-white text-opacity-80 text-center'>
             {day}
           </div>
         ))}
