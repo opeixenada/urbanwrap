@@ -23,7 +23,7 @@ export const MonthlyActivityCard: React.FC<SummaryCardProps> = ({ yearStats, gra
             when you checked in <GlowText>{checkins}</GlowText> times
           </CardText>
         </div>
-        <div className='w-full min-h-[12rem] relative mt-4'>
+        <div className='w-full min-h-48 relative mt-4'>
           <ResponsiveContainer width='100%' height={192}>
             <BarChart
               data={Object.entries(yearStats.monthlyDistribution).map(([month, count]) => ({

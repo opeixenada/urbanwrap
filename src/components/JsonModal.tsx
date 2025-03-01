@@ -14,7 +14,7 @@ export const JsonModal: React.FC<JsonModalProps> = ({ isOpen, onClose, data }) =
 
   return (
     <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[80vh] flex flex-col'>
+      <div className='bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-7/8 flex flex-col'>
         <div className='p-4 border-b flex justify-between items-center'>
           <h3 className='text-lg font-semibold'>Raw JSON Data</h3>
           <button
