@@ -22,7 +22,7 @@ interface GlowTextProps {
 export const GlowText: React.FC<GlowTextProps> = ({ children, size = "xl", className = "" }) => {
   return (
     <span
-      className={` text-${size} font-bold text-white [text-shadow:0_0_10px_rgba(255,255,255,0.5),0_0_20px_rgba(255,255,255,0.3)] ${className} `}
+      className={`text-${size} font-bold text-white [text-shadow:0_0_10px_rgba(255,255,255,0.5),0_0_20px_rgba(255,255,255,0.3)] ${className} `}
     >
       {children}
     </span>
