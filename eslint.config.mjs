@@ -1,20 +1,12 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-import prettier from "eslint-config-prettier";
 import eslintPluginPrettier from "eslint-plugin-prettier";
 import nextPlugin from "@next/eslint-plugin-next";
 import typescriptParser from "@typescript-eslint/parser";
 import typescriptPlugin from "@typescript-eslint/eslint-plugin";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import js from "@eslint/js";
+import globals from "globals";
 
 const eslintConfig = [
+  // Global ignores
   {
     ignores: [
       ".next/**",
@@ -26,24 +18,43 @@ const eslintConfig = [
       ".vscode/**",
     ],
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  // Base recommended rules
+  js.configs.recommended,
+  // Main configuration
   {
     files: ["**/*.{js,jsx,mjs,ts,tsx}"],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        ecmaVersion: 2022,
+        ecmaVersion: "latest",
         sourceType: "module",
-        project: "./tsconfig.json",
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021,
+        React: "readonly",
+        JSX: "readonly",
+      },
+    },
+    plugins: {
+      "@typescript-eslint": typescriptPlugin,
+      "@next/next": nextPlugin,
+      prettier: eslintPluginPrettier,
     },
     rules: {
       // Prettier rules
-      "prettier/prettier": "error", // This will use .prettierrc config
+      "prettier/prettier": "error",
 
       // TypeScript specific rules
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
+
+      // Disable base rule in favor of TypeScript version
+      "no-unused-vars": "off",
 
       // Next.js specific rules
       "@next/next/no-html-link-for-pages": "error",
@@ -53,19 +64,14 @@ const eslintConfig = [
       "no-restricted-syntax": [
         "warn",
         {
-          // Check for arbitrary values that might need updating in Tailwind v4
           selector: "JSXAttribute[name.name='className'][value.value=/\\[.*?\\]/]",
           message: "Check Tailwind arbitrary values for v4 compatibility",
         },
       ],
-    },
-  },
-  prettier,
-  {
-    plugins: {
-      "@typescript-eslint": typescriptPlugin,
-      "@next/next": nextPlugin,
-      prettier: eslintPluginPrettier,
+
+      // Disable rules that conflict with Prettier
+      "arrow-body-style": "off",
+      "prefer-arrow-callback": "off",
     },
   },
 ];
