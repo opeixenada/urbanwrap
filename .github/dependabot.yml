@@ -5,6 +5,10 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    groups:
+      npm-all:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
