@@ -27,7 +27,7 @@
     "@next/eslint-plugin-next": "^16.1.6",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/indefinite": "^2.3.4",
-    "@types/lodash": "^4.17.23",
+    "@types/lodash": "^4.17.24",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
